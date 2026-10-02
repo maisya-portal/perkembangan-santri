@@ -1597,13 +1597,22 @@
         if (pList.length > 0) {
           disHtml += '<h6 class="fw-bold text-danger small mb-2"><i class="bi bi-exclamation-circle me-1"></i>Catatan Kedisiplinan:</h6><div class="list-group list-group-flush border rounded-3 mb-3 modal-tab-scroll">';
           pList.forEach(function(pl) {
+            var judulPel = (pl.jenis && pl.jenis !== '-' ? pl.jenis : (pl.pelanggaran && pl.pelanggaran !== '-' ? pl.pelanggaran : (pl.keterangan && pl.keterangan !== '-' ? pl.keterangan : 'Pelanggaran Disiplin')));
+            var subPel = '';
+            if (pl.keterangan && pl.keterangan !== '-' && pl.keterangan !== judulPel) {
+              subPel = pl.keterangan;
+            }
+            if (pl.tindakan && pl.tindakan !== '-' && pl.tindakan !== 'Bimbingan') {
+              subPel = subPel ? (subPel + ' • Sanksi/Tindakan: ' + pl.tindakan) : ('Sanksi/Tindakan: ' + pl.tindakan);
+            }
             disHtml += 
               '<div class="list-group-item p-2.5">' +
                 '<div class="d-flex justify-content-between align-items-center mb-1">' +
-                  '<span class="fw-semibold text-dark">' + escapeHtml(pl.tanggal || '-') + '</span>' +
-                  '<span class="badge bg-danger">Poin Minus: ' + (pl.poin || '-') + '</span>' +
+                  '<span class="fw-semibold text-dark"><i class="bi bi-calendar-event me-1 text-danger"></i>' + escapeHtml(pl.tanggal || '-') + '</span>' +
+                  '<span class="badge bg-danger">Poin Minus: ' + (pl.poin || '0') + '</span>' +
                 '</div>' +
-                '<div class="small text-muted">' + escapeHtml(pl.keterangan || pl.pelanggaran || '-') + '</div>' +
+                '<div class="fw-bold text-dark" style="font-size: 13px;">' + escapeHtml(judulPel) + '</div>' +
+                (subPel ? '<div class="small text-muted mt-0.5">' + escapeHtml(subPel) + '</div>' : '') +
               '</div>';
           });
           disHtml += '</div>';
@@ -1611,13 +1620,16 @@
         if (rListReward.length > 0) {
           disHtml += '<h6 class="fw-bold text-success small mb-2"><i class="bi bi-star-fill text-warning me-1"></i>Apresiasi &amp; Prestasi Santri:</h6><div class="list-group list-group-flush border rounded-3 modal-tab-scroll">';
           rListReward.forEach(function(rw) {
+            var judulRew = (rw.jenis && rw.jenis !== '-' ? rw.jenis : (rw.prestasi && rw.prestasi !== '-' ? rw.prestasi : (rw.keterangan && rw.keterangan !== '-' ? rw.keterangan : 'Apresiasi & Prestasi')));
+            var subRew = (rw.keterangan && rw.keterangan !== '-' && rw.keterangan !== judulRew) ? rw.keterangan : '';
             disHtml += 
               '<div class="list-group-item p-2.5">' +
                 '<div class="d-flex justify-content-between align-items-center mb-1">' +
-                  '<span class="fw-semibold text-dark">' + escapeHtml(rw.tanggal || '-') + '</span>' +
+                  '<span class="fw-semibold text-dark"><i class="bi bi-calendar-event me-1 text-success"></i>' + escapeHtml(rw.tanggal || '-') + '</span>' +
                   '<span class="badge bg-success">Reward: +' + (rw.poin || '10') + '</span>' +
                 '</div>' +
-                '<div class="small text-muted">' + escapeHtml(rw.keterangan || rw.prestasi || '-') + '</div>' +
+                '<div class="fw-bold text-dark" style="font-size: 13px;">' + escapeHtml(judulRew) + '</div>' +
+                (subRew ? '<div class="small text-muted mt-0.5">' + escapeHtml(subRew) + '</div>' : '') +
               '</div>';
           });
           disHtml += '</div>';
