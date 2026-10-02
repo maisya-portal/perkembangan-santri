@@ -175,7 +175,27 @@
     }
 
     .cursor-pointer { cursor: pointer; }
-    .table > :not(caption) > * > * { padding: 0.75rem 0.75rem; }
+    /* Scrollable Container untuk Tab Modal (Riwayat Izin, Telepon Wartel, UKS, Disiplin, dll) */
+    .modal-tab-scroll {
+      max-height: 350px;
+      overflow-y: auto !important;
+      overflow-x: hidden;
+      padding-right: 4px;
+    }
+    .modal-tab-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .modal-tab-scroll::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+    .modal-tab-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .modal-tab-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
 
     /* Custom Toast */
     .toast-container-custom {
@@ -353,13 +373,13 @@
           <thead class="table-dark" style="background: #0f172a !important;">
             <tr>
               <th class="text-center py-2.5" style="width: 4%;">No</th>
-              <th class="py-2.5 cursor-pointer text-truncate" onclick="sortTable(1)" style="width: 22%;">Nama &amp; Identitas <i class="bi bi-arrow-down-up small ms-0.5 opacity-50"></i></th>
-              <th class="py-2.5 cursor-pointer text-truncate" onclick="sortTable(2)" style="width: 9%;">Kamar <i class="bi bi-arrow-down-up small ms-0.5 opacity-50"></i></th>
-              <th class="py-2.5 cursor-pointer text-truncate" onclick="sortTable(3)" style="width: 21%;">Ibadah (Amal Yaumi) <i class="bi bi-arrow-down-up small ms-0.5 opacity-50"></i></th>
-              <th class="py-2.5 cursor-pointer text-truncate" onclick="sortTable(4)" style="width: 15%;">Kedisiplinan <i class="bi bi-arrow-down-up small ms-0.5 opacity-50"></i></th>
+              <th class="py-2.5 cursor-pointer text-truncate" onclick="sortTable(1)" style="width: 21%;">Nama &amp; Identitas <i class="bi bi-arrow-down-up small ms-0.5 opacity-50"></i></th>
+              <th class="py-2.5 cursor-pointer text-truncate" onclick="sortTable(2)" style="width: 8%;">Kamar <i class="bi bi-arrow-down-up small ms-0.5 opacity-50"></i></th>
+              <th class="py-2.5 cursor-pointer text-truncate" onclick="sortTable(3)" style="width: 20%;">Ibadah (Amal Yaumi) <i class="bi bi-arrow-down-up small ms-0.5 opacity-50"></i></th>
+              <th class="py-2.5 cursor-pointer text-truncate" onclick="sortTable(4)" style="width: 14%;">Kedisiplinan <i class="bi bi-arrow-down-up small ms-0.5 opacity-50"></i></th>
               <th class="py-2.5 cursor-pointer text-truncate" onclick="sortTable(5)" style="width: 12%;">Adab &amp; Akhlaq <i class="bi bi-arrow-down-up small ms-0.5 opacity-50"></i></th>
-              <th class="py-2.5 cursor-pointer text-truncate" onclick="sortTable(6)" style="width: 11%;">Kesehatan <i class="bi bi-arrow-down-up small ms-0.5 opacity-50"></i></th>
-              <th class="text-center py-2.5" style="width: 6%;">Aksi</th>
+              <th class="py-2.5 cursor-pointer text-truncate" onclick="sortTable(6)" style="width: 12%;">Kesehatan <i class="bi bi-arrow-down-up small ms-0.5 opacity-50"></i></th>
+              <th class="text-center py-2.5" style="width: 9%;">Aksi</th>
             </tr>
           </thead>
           <tbody id="santri-tbody" class="bg-white">
@@ -834,18 +854,73 @@
         .replace(/'/g, '&#39;');
     }
 
-    // Helper JSONP Loader untuk Bypass CORS secara instan di GitHub Pages
+    // Loader Hybrid Tangguh: Mencoba Fetch Native (CORS) -> Fallback ke JSONP terproteksi -> Auto-retry 1x
+    function hybridDataRequest(baseApiUrl, isRetry) {
+      return new Promise(function(resolve, reject) {
+        var controller = null;
+        var fetchTimeout = null;
+        if (window.AbortController) {
+          controller = new AbortController();
+          fetchTimeout = setTimeout(function() {
+            try { controller.abort(); } catch(e) {}
+          }, 35000);
+        }
+
+        // 1. Coba Native Fetch CORS
+        fetch(baseApiUrl, {
+          method: 'GET',
+          mode: 'cors',
+          cache: 'no-store',
+          signal: controller ? controller.signal : undefined
+        })
+        .then(function(res) {
+          if (fetchTimeout) clearTimeout(fetchTimeout);
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.json();
+        })
+        .then(function(data) {
+          resolve(data);
+        })
+        .catch(function(fetchErr) {
+          if (fetchTimeout) clearTimeout(fetchTimeout);
+          console.warn('Fetch native CORS terkendala (' + (fetchErr.message || '') + '), beralih otomatis ke JSONP script loader...');
+          
+          // 2. Coba Fallback JSONP Script Tag ke HEAD
+          jsonpRequest(baseApiUrl)
+            .then(function(jsonData) {
+              resolve(jsonData);
+            })
+            .catch(function(jsonpErr) {
+              // Jika gagal pertama kali, coba retry 1x secara transparan
+              if (!isRetry) {
+                console.warn('Percobaan pertama memuat data belum berhasil, mencoba auto-retry dalam 1.2 detik...');
+                setTimeout(function() {
+                  hybridDataRequest(baseApiUrl, true).then(resolve).catch(reject);
+                }, 1200);
+              } else {
+                reject(jsonpErr);
+              }
+            });
+        });
+      });
+    }
+
+    // Helper JSONP Loader dengan penyematan ke HEAD dan sanitasi callback
     function jsonpRequest(url, callbackName) {
       return new Promise(function(resolve, reject) {
         var callbackFnName = callbackName || ('jsonp_cb_' + Date.now() + '_' + Math.floor(Math.random() * 10000));
         var timeoutId = setTimeout(function() {
           cleanup();
-          reject(new Error('Koneksi ke server timeout (waktu habis).'));
-        }, 25000);
+          reject(new Error('Koneksi ke server timeout (waktu habis saat sinkronisasi). Silakan klik "Coba Lagi".'));
+        }, 40000);
 
         function cleanup() {
           clearTimeout(timeoutId);
-          if (window[callbackFnName]) delete window[callbackFnName];
+          try {
+            if (window[callbackFnName]) delete window[callbackFnName];
+          } catch(e) {
+            window[callbackFnName] = undefined;
+          }
           var scriptEl = document.getElementById(callbackFnName);
           if (scriptEl && scriptEl.parentNode) scriptEl.parentNode.removeChild(scriptEl);
         }
@@ -855,14 +930,19 @@
           resolve(data);
         };
 
+        var targetUrl = url + (url.indexOf('?') > -1 ? '&' : '?') + 'callback=' + callbackFnName;
         var script = document.createElement('script');
         script.id = callbackFnName;
-        script.src = url + (url.indexOf('?') > -1 ? '&' : '?') + 'callback=' + callbackFnName;
+        script.type = 'text/javascript';
+        script.async = true;
+        script.src = targetUrl;
         script.onerror = function() {
           cleanup();
-          reject(new Error('Gagal menghubungi server (CORS / Network Error).'));
+          reject(new Error('Gagal menghubungi server Google Apps Script (Network/CORS Error). Pastikan koneksi internet stabil dan klik "Coba Lagi".'));
         };
-        document.body.appendChild(script);
+
+        var head = document.head || document.getElementsByTagName('head')[0] || document.documentElement;
+        head.appendChild(script);
       });
     }
 
@@ -989,10 +1069,11 @@
         showPillLoading('Sinkronisasi Laporan ' + (publicState.targetKelas || 'Kelas') + '...');
       }
 
-      var bParam = publicState.isRealtime ? 'REALTIME' : encodeURIComponent(publicState.targetBulan);
-      var reqUrl = GAS_BACKEND_URL + '?api=laporan_kelas&bulan=' + bParam + '&kelas=' + encodeURIComponent(publicState.targetKelas) + '&_t=' + Date.now();
+      var bParam = publicState.isRealtime ? 'REALTIME' : encodeURIComponent(decodeURIComponent(publicState.targetBulan || ''));
+      var kParam = encodeURIComponent(decodeURIComponent(publicState.targetKelas || ''));
+      var reqUrl = GAS_BACKEND_URL + '?api=laporan_kelas&bulan=' + bParam + '&kelas=' + kParam + '&_t=' + Date.now();
 
-      jsonpRequest(reqUrl)
+      hybridDataRequest(reqUrl)
         .then(function(res) {
           if (!silent) hidePillLoading();
           document.getElementById('table-loading-state').style.display = 'none';
@@ -1202,8 +1283,8 @@
               '</div>' +
             '</td>' +
             '<td class="text-center">' +
-              '<button type="button" class="btn btn-xs btn-primary fw-bold rounded-pill px-2.5 py-1 shadow-2xs text-nowrap" onclick="openPublicDetailSantri(\'' + s.id + '\')">' +
-                '<i class="bi bi-eye me-1"></i>Rapor' +
+              '<button type="button" class="btn btn-xs btn-primary fw-bold rounded-pill px-2 py-1 shadow-2xs text-nowrap" style="font-size: 11px;" onclick="openPublicDetailSantri(\'' + s.id + '\')" title="Lihat Data Rinci Santri">' +
+                '<i class="bi bi-file-earmark-text me-1"></i>Data Rinci' +
               '</button>' +
             '</td>' +
           '</tr>';
@@ -1263,10 +1344,10 @@
 
       showPillLoading('Memuat Rincian ' + santriNama + '...');
 
-      var bParam = publicState.isRealtime ? 'REALTIME' : encodeURIComponent(publicState.targetBulan);
+      var bParam = publicState.isRealtime ? 'REALTIME' : encodeURIComponent(decodeURIComponent(publicState.targetBulan || ''));
       var reqUrl = GAS_BACKEND_URL + '?api=detail_santri&id=' + encodeURIComponent(santriId) + '&bulan=' + bParam + '&_t=' + Date.now();
 
-      jsonpRequest(reqUrl)
+      hybridDataRequest(reqUrl)
         .then(function(res) {
           hidePillLoading();
           if (res && res.success && res.data) {
@@ -1399,7 +1480,7 @@
       if (uksRiwayat.length === 0) {
         uksContainer.innerHTML = '<div class="alert alert-success-subtle border border-success-subtle text-success p-3 text-center mb-0"><i class="bi bi-shield-check me-1 fs-5"></i>Alhamdulillah, ananda dalam keadaan sehat wal afiat dan tidak memiliki catatan sakit di UKS pada periode ini.</div>';
       } else {
-        var uksHtml = '<div class="list-group list-group-flush border rounded-3">';
+        var uksHtml = '<div class="list-group list-group-flush border rounded-3 modal-tab-scroll">';
         uksRiwayat.forEach(function(u) {
           uksHtml += 
             '<div class="list-group-item p-3">' +
@@ -1427,7 +1508,7 @@
         disHtml = '<div class="alert alert-success-subtle border border-success-subtle text-success p-3 text-center mb-0"><i class="bi bi-award-fill me-1 fs-5"></i>Masya Allah, ananda sangat tertib dan disiplin. Tidak ada catatan pelanggaran disiplin pada bulan ini.</div>';
       } else {
         if (pList.length > 0) {
-          disHtml += '<h6 class="fw-bold text-danger small mb-2"><i class="bi bi-exclamation-circle me-1"></i>Catatan Kedisiplinan:</h6><div class="list-group list-group-flush border rounded-3 mb-3">';
+          disHtml += '<h6 class="fw-bold text-danger small mb-2"><i class="bi bi-exclamation-circle me-1"></i>Catatan Kedisiplinan:</h6><div class="list-group list-group-flush border rounded-3 mb-3 modal-tab-scroll">';
           pList.forEach(function(pl) {
             disHtml += 
               '<div class="list-group-item p-2.5">' +
@@ -1441,7 +1522,7 @@
           disHtml += '</div>';
         }
         if (rListReward.length > 0) {
-          disHtml += '<h6 class="fw-bold text-success small mb-2"><i class="bi bi-star-fill text-warning me-1"></i>Apresiasi &amp; Prestasi Santri:</h6><div class="list-group list-group-flush border rounded-3">';
+          disHtml += '<h6 class="fw-bold text-success small mb-2"><i class="bi bi-star-fill text-warning me-1"></i>Apresiasi &amp; Prestasi Santri:</h6><div class="list-group list-group-flush border rounded-3 modal-tab-scroll">';
           rListReward.forEach(function(rw) {
             disHtml += 
               '<div class="list-group-item p-2.5">' +
@@ -1470,7 +1551,7 @@
       if (izList.length === 0) {
         izHtml += '<div class="p-3 bg-light rounded-3 text-muted small text-center">Tidak ada riwayat perizinan bulan ini.</div>';
       } else {
-        izHtml += '<div class="list-group list-group-flush border rounded-3">';
+        izHtml += '<div class="list-group list-group-flush border rounded-3 modal-tab-scroll">';
         izList.forEach(function(iz) {
           izHtml += 
             '<div class="list-group-item p-2">' +
@@ -1490,7 +1571,7 @@
       if (telList.length === 0) {
         izHtml += '<div class="p-3 bg-light rounded-3 text-muted small text-center">Tidak ada catatan penelponan bulan ini.</div>';
       } else {
-        izHtml += '<div class="list-group list-group-flush border rounded-3">';
+        izHtml += '<div class="list-group list-group-flush border rounded-3 modal-tab-scroll">';
         telList.forEach(function(tl) {
           izHtml += 
             '<div class="list-group-item p-2">' +
@@ -1512,7 +1593,7 @@
       if (catWali.length === 0) {
         catContainer.innerHTML = '<p class="text-muted fst-italic mb-0">Belum ada catatan atau tanggapan dari wali santri sebelumnya.</p>';
       } else {
-        var cHtml = '<div class="list-group list-group-flush border rounded-3">';
+        var cHtml = '<div class="list-group list-group-flush border rounded-3 modal-tab-scroll">';
         catWali.forEach(function(cw) {
           cHtml += 
             '<div class="list-group-item p-3">' +
