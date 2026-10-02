@@ -1312,6 +1312,11 @@
       document.getElementById('count-santri-filtered').textContent = total;
     }
 
+    function getSafeAvatarUrl(nama, size) {
+      var clean = String(nama || 'Santri').replace(/['"\\<>&]/g, ' ').trim();
+      return 'https://ui-avatars.com/api/?name=' + encodeURIComponent(clean) + '&background=065f46&color=fff&size=' + (size || 64);
+    }
+
     function renderSantriRows(list) {
       var tbody = document.getElementById('santri-tbody');
       if (!tbody) return;
@@ -1327,7 +1332,9 @@
 
       list.forEach(function(s, idx) {
         var sFoto = s.foto || '';
-        var avatarSrc = sFoto ? sFoto : ('https://ui-avatars.com/api/?name=' + encodeURIComponent(s.nama) + '&background=065f46&color=fff&size=64');
+        var isValidFoto = typeof sFoto === 'string' && (sFoto.startsWith('http://') || sFoto.startsWith('https://') || sFoto.startsWith('data:image/'));
+        var defaultAvatar = getSafeAvatarUrl(s.nama, 64);
+        var avatarSrc = isValidFoto ? sFoto : defaultAvatar;
 
         var ibadahGrade = s.ibadah ? s.ibadah.grade : 'B';
         var ibadahBadgeClass = ibadahGrade === 'A' ? 'bg-success' : (ibadahGrade === 'B' ? 'bg-primary' : (ibadahGrade === 'C' ? 'bg-warning text-dark' : 'bg-danger'));
@@ -1359,7 +1366,7 @@
             '<td class="text-center fw-medium text-muted">' + (idx + 1) + '</td>' +
             '<td>' +
               '<div class="d-flex align-items-center gap-2">' +
-                '<img src="' + avatarSrc + '" class="rounded-circle border shadow-2xs flex-shrink-0" style="width: 32px; height: 32px; object-fit: cover;" onerror="this.onerror=null; this.src=\'https://ui-avatars.com/api/?name=' + encodeURIComponent(s.nama) + '&background=065f46&color=fff&size=64\';">' +
+                '<img src="' + avatarSrc + '" class="rounded-circle border shadow-2xs flex-shrink-0" style="width: 32px; height: 32px; object-fit: cover;" onerror="this.onerror=null; this.src=\'' + defaultAvatar + '\';">' +
                 '<div style="min-width: 0;">' +
                   '<div class="fw-bold text-dark cursor-pointer text-truncate" style="max-width: 175px;" onclick="openPublicDetailSantri(\'' + s.id + '\')" title="' + escapeHtml(s.nama) + '">' +
                     escapeHtml(s.nama) +
@@ -1521,7 +1528,11 @@
       document.getElementById('modal-santri-periode').textContent = publicState.isRealtime ? 'Real-Time (Terbaru)' : ('Periode ' + displayBulan);
 
       var fotoEl = document.getElementById('modal-santri-foto');
-      fotoEl.src = p.foto ? p.foto : ('https://ui-avatars.com/api/?name=' + encodeURIComponent(p.nama) + '&background=065f46&color=fff&size=128');
+      var sFotoModal = p.foto || '';
+      var isValidFotoModal = typeof sFotoModal === 'string' && (sFotoModal.startsWith('http://') || sFotoModal.startsWith('https://') || sFotoModal.startsWith('data:image/'));
+      var safeAvatarModal = getSafeAvatarUrl(p.nama, 128);
+      fotoEl.src = isValidFotoModal ? sFotoModal : safeAvatarModal;
+      fotoEl.onerror = function() { this.onerror = null; this.src = safeAvatarModal; };
 
       // Capaian Ibadah
       var percent = ov.persen || ov.percent || 100;
