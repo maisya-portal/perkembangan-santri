@@ -1524,9 +1524,12 @@
       fotoEl.src = p.foto ? p.foto : ('https://ui-avatars.com/api/?name=' + encodeURIComponent(p.nama) + '&background=065f46&color=fff&size=128');
 
       // Capaian Ibadah
-      document.getElementById('modal-santri-percent').textContent = (ov.percent || 100) + '%';
-      document.getElementById('modal-santri-predikat').textContent = ov.predikat || 'MUMTAZ (SANGAT BAIK)';
-      var grade = ov.grade || 'A';
+      var percent = ov.persen || ov.percent || 100;
+      var predikat = ov.predikat || 'MUMTAZ (SANGAT BAIK)';
+      var grade = ov.grade || (percent >= 90 ? 'A' : (percent >= 75 ? 'B' : (percent >= 60 ? 'C' : 'D')));
+
+      document.getElementById('modal-santri-percent').textContent = percent + '%';
+      document.getElementById('modal-santri-predikat').textContent = predikat;
       var gradeBadge = document.getElementById('modal-badge-grade');
       gradeBadge.textContent = grade;
       gradeBadge.className = 'position-absolute bottom-0 end-0 badge rounded-pill border border-white fw-bold shadow-2xs ' +
@@ -1547,7 +1550,7 @@
         waLink.classList.add('d-none');
       }
 
-      // 4 Pilar
+      // 4 Pilar Pembinaan
       var wP = pilars.wajib || {};
       document.getElementById('modal-pilar-wajib-baik').textContent = wP.baik || '-';
       document.getElementById('modal-pilar-wajib-kuat').textContent = wP.perluDikuatkan || 'Pertahankan istiqomah';
@@ -1564,21 +1567,32 @@
       document.getElementById('modal-pilar-adab-baik').textContent = aP.baik || '-';
       document.getElementById('modal-pilar-adab-kuat').textContent = aP.perluDikuatkan || 'Sopan santun dan tawadhu';
 
-      // 1. Rincian Amal Yaumi
+      // 1. Rincian Amal Yaumi (Sesuai Nilai Input A, B, C, D dan Predikatnya)
       var ay = data.amalYaumi || {};
       document.getElementById('modal-amalyaumi-periode').textContent = ay.periode ? formatNamaPeriodeBulan(ay.periode) : displayBulan;
-      var rList = ay.rincianIbadah || data.amalanResults || [];
+      var rList = (ay.rincianIbadah && ay.rincianIbadah.length > 0) ? ay.rincianIbadah : (data.amalanResults || []);
       var ayContainer = document.getElementById('modal-amalyaumi-list');
       if (rList.length === 0) {
-        ayContainer.innerHTML = '<div class="alert alert-light border small text-muted text-center py-3">Catatan amal yaumi tercatat sangat baik dan tertib di masjid asrama.</div>';
+        ayContainer.innerHTML = '<div class="alert alert-light border small text-muted text-center py-3">Catatan amal yaumi belum tersedia untuk periode ini.</div>';
       } else {
         var ayHtml = '<div class="row g-2">';
         rList.forEach(function(item) {
+          var gr = String(item.grade || 'A').toUpperCase().trim();
+          var pred = item.predikat || (gr === 'A' ? 'Sangat Baik' : (gr === 'B' ? 'Baik' : (gr === 'C' ? 'Cukup' : 'Perlu Bimbingan')));
+          var badgeClass = gr === 'A' ? 'bg-success text-white' : (gr === 'B' ? 'bg-primary text-white' : (gr === 'C' ? 'bg-warning text-dark' : 'bg-danger text-white'));
+          var iconClass = gr === 'A' ? 'bi-check-circle-fill' : (gr === 'B' ? 'bi-hand-thumbs-up-fill' : (gr === 'C' ? 'bi-info-circle-fill' : 'bi-exclamation-triangle-fill'));
+          var catTxt = (item.catatan && String(item.catatan).trim() !== '') ? String(item.catatan).trim() : '';
+
           ayHtml += 
             '<div class="col-12 col-md-6">' +
-              '<div class="p-2.5 rounded-3 bg-light border d-flex justify-content-between align-items-center">' +
-                '<span class="fw-semibold text-dark">' + escapeHtml(item.nama || item.kegiatan) + '</span>' +
-                '<span class="badge bg-success-subtle text-success border border-success-subtle">' + escapeHtml(item.capaian || item.status || 'Terlaksana') + '</span>' +
+              '<div class="p-2.5 rounded-3 bg-white border shadow-2xs h-100 d-flex flex-column justify-content-between">' +
+                '<div class="d-flex justify-content-between align-items-center gap-2">' +
+                  '<span class="fw-bold text-dark" style="font-size: 13px;">' + escapeHtml(item.nama || item.kegiatan || 'Amalan') + '</span>' +
+                  '<span class="badge ' + badgeClass + ' px-2.5 py-1 text-nowrap rounded-pill" style="font-size: 11px;">' +
+                    '<i class="bi ' + iconClass + ' me-1"></i>' + gr + ' • ' + escapeHtml(pred) +
+                  '</span>' +
+                '</div>' +
+                (catTxt ? '<div class="small text-muted mt-1.5 p-1.5 bg-light rounded-2" style="font-size: 11px;"><i class="bi bi-chat-left-quote text-primary me-1"></i>Catatan: ' + escapeHtml(catTxt) + '</div>' : '') +
               '</div>' +
             '</div>';
         });
@@ -1636,16 +1650,50 @@
         uksContainer.innerHTML = uksHtml;
       }
 
-      // 3. Catatan Disiplin & Reward
+      // 3. Catatan Disiplin & Reward (Dengan Widget Ringkasan Skor Poin Minus, Reward & Nilai Akhir)
       var pel = data.pelanggaran || {};
       var rew = data.reward || {};
+      var dis = data.kedisiplinan || {};
       var disContainer = document.getElementById('modal-disiplin-list');
       var pList = pel.riwayat || [];
       var rListReward = rew.riwayat || [];
 
+      var poinMinus = typeof dis.totalPoinMinus !== 'undefined' ? dis.totalPoinMinus : (pel.totalPoinMinus || 0);
+      var poinReward = typeof dis.totalPoinReward !== 'undefined' ? dis.totalPoinReward : (rew.totalPoinReward || 0);
+      var nilaiAkhir = typeof dis.nilaiAkhir !== 'undefined' ? dis.nilaiAkhir : Math.max(0, Math.min(100, 100 - poinMinus + poinReward));
+      var predDisiplin = dis.predikat || (nilaiAkhir >= 95 ? 'Sangat Tertib (A)' : (nilaiAkhir >= 80 ? 'Tertib (B)' : (nilaiAkhir >= 65 ? 'Perlu Perhatian (C)' : 'Bimbingan Khusus (D)')));
+      var badgeClassDis = nilaiAkhir >= 95 ? 'bg-success' : (nilaiAkhir >= 80 ? 'bg-primary' : (nilaiAkhir >= 65 ? 'bg-warning text-dark' : 'bg-danger'));
+
       var disHtml = '';
+
+      // WIDGET 3 KARTU STATISTIK KEDISIPLINAN
+      disHtml += 
+        '<div class="row g-2 mb-3">' +
+          '<div class="col-4">' +
+            '<div class="p-2.5 rounded-3 bg-danger-subtle border border-danger-subtle text-center h-100 shadow-2xs">' +
+              '<div class="text-danger small fw-semibold" style="font-size: 11px;"><i class="bi bi-shield-x me-1"></i>Poin Minus</div>' +
+              '<div class="fw-bold text-danger fs-5 my-0.5">-' + poinMinus + ' Poin</div>' +
+              '<div class="text-muted" style="font-size: 10px;">' + pList.length + ' Catatan Pelanggaran</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="col-4">' +
+            '<div class="p-2.5 rounded-3 bg-success-subtle border border-success-subtle text-center h-100 shadow-2xs">' +
+              '<div class="text-success small fw-semibold" style="font-size: 11px;"><i class="bi bi-star-fill me-1 text-warning"></i>Poin Reward</div>' +
+              '<div class="fw-bold text-success fs-5 my-0.5">+' + poinReward + ' Poin</div>' +
+              '<div class="text-muted" style="font-size: 10px;">' + rListReward.length + ' Prestasi / Apresiasi</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="col-4">' +
+            '<div class="p-2.5 rounded-3 bg-primary-subtle border border-primary-subtle text-center h-100 shadow-2xs">' +
+              '<div class="text-primary small fw-semibold" style="font-size: 11px;"><i class="bi bi-trophy-fill me-1 text-primary"></i>Nilai Akhir Disiplin</div>' +
+              '<div class="fw-bold text-primary fs-5 my-0.5">' + nilaiAkhir + ' / 100</div>' +
+              '<div class="badge ' + badgeClassDis + ' px-2 py-0.5 rounded-pill" style="font-size: 10px;">' + escapeHtml(predDisiplin) + '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+
       if (pList.length === 0 && rListReward.length === 0) {
-        disHtml = '<div class="alert alert-success-subtle border border-success-subtle text-success p-3 text-center mb-0"><i class="bi bi-award-fill me-1 fs-5"></i>Masya Allah, ananda sangat tertib dan disiplin. Tidak ada catatan pelanggaran disiplin pada bulan ini.</div>';
+        disHtml += '<div class="alert alert-success-subtle border border-success-subtle text-success p-3 text-center mb-0"><i class="bi bi-award-fill me-1 fs-5"></i>Masya Allah, ananda sangat tertib dan disiplin. Tidak ada catatan pelanggaran disiplin pada bulan ini.</div>';
       } else {
         if (pList.length > 0) {
           disHtml += '<h6 class="fw-bold text-danger small mb-2"><i class="bi bi-exclamation-circle me-1"></i>Catatan Kedisiplinan:</h6><div class="list-group list-group-flush border rounded-3 mb-3 modal-tab-scroll">';
