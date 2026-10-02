@@ -111,11 +111,67 @@
 
     /* Modal Zoom & Fullscreen Styling */
     #modalPublicDetailSantri .modal-dialog {
+      max-width: 1240px !important;
+      width: 95% !important;
+      margin: 1.25rem auto !important;
       transition: max-width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #modalPublicDetailSantri .modal-content {
+      max-height: 92vh !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      display: block !important;
+      position: relative !important;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.35) !important;
+      scrollbar-width: thin !important;
+      scrollbar-color: #059669 #e2e8f0 !important;
+    }
+    #modalPublicDetailSantri .modal-content::-webkit-scrollbar {
+      width: 10px !important;
+      display: block !important;
+    }
+    #modalPublicDetailSantri .modal-content::-webkit-scrollbar-track {
+      background: #f1f5f9 !important;
+      border-radius: 6px;
+    }
+    #modalPublicDetailSantri .modal-content::-webkit-scrollbar-thumb {
+      background: #059669 !important;
+      border-radius: 6px;
+      border: 2px solid #f1f5f9;
+    }
+    #modalPublicDetailSantri .modal-content::-webkit-scrollbar-thumb:hover {
+      background: #047857 !important;
+    }
+
+    /* Horizontal Scroll Tab Nav-Pills */
+    .horizontal-nav-scroll {
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      white-space: nowrap !important;
+      -webkit-overflow-scrolling: touch !important;
+      scrollbar-width: thin !important;
+      scrollbar-color: #059669 #e2e8f0 !important;
+      padding-bottom: 4px !important;
+    }
+    .horizontal-nav-scroll::-webkit-scrollbar {
+      height: 7px !important;
+      display: block !important;
+    }
+    .horizontal-nav-scroll::-webkit-scrollbar-track {
+      background: #f1f5f9 !important;
+      border-radius: 4px;
+    }
+    .horizontal-nav-scroll::-webkit-scrollbar-thumb {
+      background: #10b981 !important;
+      border-radius: 4px;
+    }
+    .horizontal-nav-scroll::-webkit-scrollbar-thumb:hover {
+      background: #059669 !important;
     }
     #modal-zoom-container {
       transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       transform-origin: top center;
+      width: 100%;
     }
     .modal-dialog.modal-fullscreen {
       width: 100vw !important;
@@ -125,6 +181,7 @@
     }
     .modal-dialog.modal-fullscreen .modal-content {
       height: 100% !important;
+      max-height: 100% !important;
       border: 0 !important;
       border-radius: 0 !important;
     }
@@ -401,10 +458,10 @@
   <!-- MODAL DETAIL RAPOR PERKEMBANGAN SANTRI UNTUK WALI SANTRI    -->
   <!-- ============================================================ -->
   <div class="modal fade" id="modalPublicDetailSantri" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered">
-      <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden; background: #f8fafc;">
+    <div class="modal-dialog modal-xl" style="max-width: 1240px; width: 95%; margin: 1.25rem auto;">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; max-height: 92vh; overflow-y: auto !important; overflow-x: hidden; background: #f8fafc; position: relative;">
         
-        <div id="modal-zoom-container">
+        <div id="modal-zoom-container" style="transition: transform 0.2s ease; transform-origin: top center; width: 100%;">
         <!-- HEADER MODAL POSTER STYLE -->
         <div class="modal-header border-0 text-white p-3 p-md-4" style="background: linear-gradient(135deg, #064e3b 0%, #065f46 60%, #047857 100%);">
           <div class="w-100">
@@ -566,33 +623,43 @@
           </div>
 
           <!-- TABS RINCIAN DETAIL (AMAL YAUMI, UKS, DISIPLIN, BUKU PENGHUBUNG) -->
-          <ul class="nav nav-pills gap-2 mb-3 border-bottom pb-2" id="publicDetailTabs" role="tablist">
-            <li class="nav-item">
-              <button class="nav-link active btn-sm rounded-pill fw-bold" id="tab-btn-amalyaumi" onclick="switchPublicTab('amalyaumi')">
-                <i class="bi bi-calendar-check me-1"></i> Rincian Amal Yaumi
-              </button>
-            </li>
-            <li class="nav-item">
-              <button class="nav-link btn-sm rounded-pill fw-bold" id="tab-btn-uks" onclick="switchPublicTab('uks')">
-                <i class="bi bi-heart-pulse me-1"></i> Catatan Medis UKS
-              </button>
-            </li>
-            <li class="nav-item">
-              <button class="nav-link btn-sm rounded-pill fw-bold" id="tab-btn-disiplin" onclick="switchPublicTab('disiplin')">
-                <i class="bi bi-shield-check me-1"></i> Kedisiplinan &amp; Reward
-              </button>
-            </li>
-            <li class="nav-item">
-              <button class="nav-link btn-sm rounded-pill fw-bold" id="tab-btn-izin" onclick="switchPublicTab('izin')">
-                <i class="bi bi-door-open me-1"></i> Izin &amp; Telepon
-              </button>
-            </li>
-            <li class="nav-item">
-              <button class="nav-link btn-sm rounded-pill fw-bold text-success" id="tab-btn-penghubung" onclick="switchPublicTab('penghubung')">
-                <i class="bi bi-chat-left-dots-fill me-1"></i> Buku Penghubung Wali
-              </button>
-            </li>
-          </ul>
+          <div class="d-flex align-items-center gap-1.5 mb-3 border-bottom pb-2">
+            <button type="button" class="btn btn-xs btn-light border rounded-circle shadow-2xs text-muted flex-shrink-0" onclick="window.scrollPublicDetailTabs(-200)" title="Geser Tab ke Kiri" style="width: 28px; height: 28px; padding: 0; display: flex; align-items: center; justify-content: center;">
+              <i class="bi bi-chevron-left" style="font-size: 13px;"></i>
+            </button>
+            <div class="horizontal-nav-scroll flex-grow-1" id="public-tabs-scroll-wrapper">
+              <ul class="nav nav-pills flex-nowrap gap-2" id="publicDetailTabs" role="tablist" style="min-width: max-content;">
+                <li class="nav-item">
+                  <button class="nav-link active btn-sm rounded-pill fw-bold text-nowrap" id="tab-btn-amalyaumi" onclick="switchPublicTab('amalyaumi')">
+                    <i class="bi bi-calendar-check me-1"></i> Rincian Amal Yaumi
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link btn-sm rounded-pill fw-bold text-nowrap" id="tab-btn-uks" onclick="switchPublicTab('uks')">
+                    <i class="bi bi-heart-pulse me-1"></i> Catatan Medis UKS
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link btn-sm rounded-pill fw-bold text-nowrap" id="tab-btn-disiplin" onclick="switchPublicTab('disiplin')">
+                    <i class="bi bi-shield-check me-1"></i> Kedisiplinan &amp; Reward
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link btn-sm rounded-pill fw-bold text-nowrap" id="tab-btn-izin" onclick="switchPublicTab('izin')">
+                    <i class="bi bi-door-open me-1"></i> Izin &amp; Telepon
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link btn-sm rounded-pill fw-bold text-success text-nowrap" id="tab-btn-penghubung" onclick="switchPublicTab('penghubung')">
+                    <i class="bi bi-chat-left-dots-fill me-1"></i> Buku Penghubung Wali
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <button type="button" class="btn btn-xs btn-light border rounded-circle shadow-2xs text-muted flex-shrink-0" onclick="window.scrollPublicDetailTabs(200)" title="Geser Tab ke Kanan" style="width: 28px; height: 28px; padding: 0; display: flex; align-items: center; justify-content: center;">
+              <i class="bi bi-chevron-right" style="font-size: 13px;"></i>
+            </button>
+          </div>
 
           <!-- TAB CONTENT -->
           <div class="tab-content" id="publicDetailTabContent">
@@ -1611,6 +1678,13 @@
       // Default buka tab Amal Yaumi
       switchPublicTab('amalyaumi');
     }
+
+    window.scrollPublicDetailTabs = function(delta) {
+      var wrapper = document.getElementById('public-tabs-scroll-wrapper');
+      if (wrapper) {
+        wrapper.scrollBy({ left: delta, behavior: 'smooth' });
+      }
+    };
 
     // Tab Switching Manual di Modal (Sesuai AGENTS.md Rule 7)
     function switchPublicTab(tabKey) {
