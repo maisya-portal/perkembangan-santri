@@ -68,9 +68,10 @@
     }
 
     .main-container {
-      max-width: 1140px;
+      width: 98% !important;
+      max-width: 100% !important;
       margin: -45px auto 0;
-      padding: 0 16px;
+      padding: 0 12px;
       position: relative;
       z-index: 10;
     }
@@ -81,6 +82,51 @@
       box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.06);
       border: 1px solid #e2e8f0;
       margin-bottom: 20px;
+    }
+
+    /* Optimalisasi Tabel Full-Width Bebas Geser-Geser Horizontal */
+    #main-santri-table {
+      width: 100% !important;
+      table-layout: fixed !important;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    #main-santri-table th, #main-santri-table td {
+      padding: 8px 6px;
+      vertical-align: middle;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .table-responsive {
+      overflow-x: hidden !important;
+    }
+    @media (max-width: 991px) {
+      .table-responsive {
+        overflow-x: auto !important;
+      }
+      #main-santri-table {
+        min-width: 820px;
+      }
+    }
+
+    /* Modal Zoom & Fullscreen Styling */
+    #modalPublicDetailSantri .modal-dialog {
+      transition: max-width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #modal-zoom-container {
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-origin: top center;
+    }
+    .modal-dialog.modal-fullscreen {
+      width: 100vw !important;
+      max-width: none !important;
+      height: 100% !important;
+      margin: 0 !important;
+    }
+    .modal-dialog.modal-fullscreen .modal-content {
+      height: 100% !important;
+      border: 0 !important;
+      border-radius: 0 !important;
     }
 
     .stat-card {
@@ -242,19 +288,29 @@
       </div>
     </div>
 
-    <!-- SEARCH BAR -->
+    <!-- SEARCH & REALTIME FILTER BAR -->
     <div class="card-custom p-3 mb-3">
       <div class="row g-2 align-items-center">
-        <div class="col-12 col-md-8">
+        <div class="col-12 col-md-5">
           <div class="input-group">
             <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
             <input type="text" id="input-search-santri" class="form-control border-start-0" placeholder="Ketik nama ananda atau NIS santri untuk pencarian instan..." onkeyup="filterSantriTable(this.value)">
           </div>
         </div>
-        <div class="col-12 col-md-4 text-md-end">
-          <div class="d-flex align-items-center justify-content-md-end gap-2">
-            <span class="small text-muted fw-semibold">Pilih Periode:</span>
-            <input type="month" id="input-select-bulan" class="form-control form-control-sm" style="max-width: 170px;" onchange="onBulanUserChange(this.value)">
+        <div class="col-12 col-md-7 text-md-end">
+          <div class="d-flex align-items-center justify-content-md-end gap-2 flex-wrap">
+            <button type="button" id="btn-toggle-realtime" class="btn btn-sm btn-success fw-bold rounded-pill px-3 py-1.5 shadow-2xs d-inline-flex align-items-center gap-1.5" onclick="toggleRealtimeMode()">
+              <span class="spinner-grow spinner-grow-sm text-white" style="width: 8px; height: 8px;"></span>
+              <span id="btn-realtime-text">Mode Real-Time Aktif</span>
+            </button>
+            <div class="d-flex align-items-center gap-1 bg-light p-1 rounded-pill border">
+              <span class="small text-muted fw-semibold ps-2" style="font-size: 11px;">Bulan:</span>
+              <input type="month" id="input-select-bulan" class="form-control form-control-sm border-0 bg-transparent" style="max-width: 140px; font-size: 12px;" onchange="onBulanUserChange(this.value)">
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-2.5 py-1.5 shadow-2xs d-inline-flex align-items-center gap-1" onclick="manualRefreshRealtime()" title="Sinkronisasi Data Real-Time">
+              <i class="bi bi-arrow-repeat" id="icon-refresh-sync"></i>
+              <span class="small d-none d-lg-inline" id="last-sync-time">Baru Saja</span>
+            </button>
           </div>
         </div>
       </div>
@@ -291,19 +347,19 @@
         </button>
       </div>
 
-      <!-- Table Container -->
+      <!-- Table Container (Full-Width Tanpa Scroll Horizontal) -->
       <div class="table-responsive" id="table-content-state" style="display: none;">
-        <table class="table table-hover align-middle mb-0" id="main-santri-table" style="font-size: 13px;">
+        <table class="table table-hover align-middle mb-0" id="main-santri-table" style="font-size: 12px; width: 100%; table-layout: fixed;">
           <thead class="table-dark" style="background: #0f172a !important;">
             <tr>
-              <th class="text-center py-2.5" style="width: 45px;">No</th>
-              <th class="py-2.5 cursor-pointer" onclick="sortTable(1)">Nama &amp; Identitas Santri <i class="bi bi-arrow-down-up small ms-1 opacity-50"></i></th>
-              <th class="py-2.5 cursor-pointer" onclick="sortTable(2)">Kamar / Asrama <i class="bi bi-arrow-down-up small ms-1 opacity-50"></i></th>
-              <th class="py-2.5 cursor-pointer" onclick="sortTable(3)">Ibadah (Amal Yaumi) <i class="bi bi-arrow-down-up small ms-1 opacity-50"></i></th>
-              <th class="py-2.5 cursor-pointer" onclick="sortTable(4)">Kedisiplinan <i class="bi bi-arrow-down-up small ms-1 opacity-50"></i></th>
-              <th class="py-2.5 cursor-pointer" onclick="sortTable(5)">Adab &amp; Akhlaq <i class="bi bi-arrow-down-up small ms-1 opacity-50"></i></th>
-              <th class="py-2.5 cursor-pointer" onclick="sortTable(6)">Kesehatan (UKS) <i class="bi bi-arrow-down-up small ms-1 opacity-50"></i></th>
-              <th class="text-center py-2.5" style="width: 130px;">Aksi</th>
+              <th class="text-center py-2.5" style="width: 4%;">No</th>
+              <th class="py-2.5 cursor-pointer text-truncate" onclick="sortTable(1)" style="width: 22%;">Nama &amp; Identitas <i class="bi bi-arrow-down-up small ms-0.5 opacity-50"></i></th>
+              <th class="py-2.5 cursor-pointer text-truncate" onclick="sortTable(2)" style="width: 9%;">Kamar <i class="bi bi-arrow-down-up small ms-0.5 opacity-50"></i></th>
+              <th class="py-2.5 cursor-pointer text-truncate" onclick="sortTable(3)" style="width: 21%;">Ibadah (Amal Yaumi) <i class="bi bi-arrow-down-up small ms-0.5 opacity-50"></i></th>
+              <th class="py-2.5 cursor-pointer text-truncate" onclick="sortTable(4)" style="width: 15%;">Kedisiplinan <i class="bi bi-arrow-down-up small ms-0.5 opacity-50"></i></th>
+              <th class="py-2.5 cursor-pointer text-truncate" onclick="sortTable(5)" style="width: 12%;">Adab &amp; Akhlaq <i class="bi bi-arrow-down-up small ms-0.5 opacity-50"></i></th>
+              <th class="py-2.5 cursor-pointer text-truncate" onclick="sortTable(6)" style="width: 11%;">Kesehatan <i class="bi bi-arrow-down-up small ms-0.5 opacity-50"></i></th>
+              <th class="text-center py-2.5" style="width: 6%;">Aksi</th>
             </tr>
           </thead>
           <tbody id="santri-tbody" class="bg-white">
@@ -328,13 +384,14 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden; background: #f8fafc;">
         
+        <div id="modal-zoom-container">
         <!-- HEADER MODAL POSTER STYLE -->
-        <div class="modal-header border-0 text-white p-4" style="background: linear-gradient(135deg, #064e3b 0%, #065f46 60%, #047857 100%);">
+        <div class="modal-header border-0 text-white p-3 p-md-4" style="background: linear-gradient(135deg, #064e3b 0%, #065f46 60%, #047857 100%);">
           <div class="w-100">
             <div class="d-flex justify-content-between align-items-start mb-3">
               <div class="d-flex align-items-center gap-2">
-                <div class="bg-white rounded-circle p-1.5 shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
-                  <i class="bi bi-mortarboard-fill text-success fs-4"></i>
+                <div class="bg-white rounded-circle p-1 shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+                  <img src="./logo.png" alt="Logo Pondok" class="rounded-circle" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <div>
                   <div class="text-warning small text-uppercase tracking-wider fw-bold" style="letter-spacing: 1px; font-size: 11px;">PONDOK PESANTREN IMAM SYAFI'I BREBES</div>
@@ -342,11 +399,25 @@
                   <div class="text-light opacity-75 small fst-italic">"Bertumbuh dalam ibadah, kedisiplinan, dan akhlaq mulia."</div>
                 </div>
               </div>
-              <div class="d-flex align-items-center gap-2">
-                <span class="badge bg-warning text-dark px-3 py-1.5 rounded-pill fw-bold shadow-2xs">
+              <div class="d-flex align-items-center gap-1.5">
+                <!-- KONTROL ZOOM & FULLSCREEN -->
+                <button type="button" class="btn btn-sm btn-outline-light rounded-circle p-1 shadow-2xs" onclick="zoomDetailModal(-0.1)" title="Perkecil Tampilan (-10%)" style="width: 32px; height: 32px;">
+                  <i class="bi bi-zoom-out"></i>
+                </button>
+                <span id="modal-zoom-val" class="badge bg-white bg-opacity-25 px-2 py-1 text-white font-monospace" style="font-size: 11px;">100%</span>
+                <button type="button" class="btn btn-sm btn-outline-light rounded-circle p-1 shadow-2xs" onclick="zoomDetailModal(0.1)" title="Perbesar Tampilan (+10%)" style="width: 32px; height: 32px;">
+                  <i class="bi bi-zoom-in"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-light rounded-circle p-1 shadow-2xs" onclick="zoomDetailModal('reset')" title="Reset Ukuran Normal" style="width: 32px; height: 32px;">
+                  <i class="bi bi-arrow-counterclockwise"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-light rounded-circle p-1 shadow-2xs ms-1" id="btn-modal-fullscreen" onclick="toggleDetailFullscreen()" title="Layar Penuh (Full Screen)" style="width: 32px; height: 32px;">
+                  <i class="bi bi-arrows-fullscreen"></i>
+                </button>
+                <span class="badge bg-warning text-dark px-3 py-1.5 rounded-pill fw-bold shadow-2xs d-none d-sm-inline-block ms-1">
                   <i class="bi bi-patch-check-fill me-1"></i>Dokumen Resmi Pengasuhan
                 </span>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white ms-1" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
             </div>
 
@@ -521,8 +592,48 @@
 
             <!-- 2. TAB UKS -->
             <div class="tab-pane fade" id="pane-uks">
+              <!-- WIDGET ANTROPOMETRI FISIK UKS (BERAT BADAN & TINGGI BADAN) -->
+              <div class="card border-0 shadow-2xs rounded-3 bg-white p-3 mb-3" style="background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%); border: 1px solid #bbf7d0 !important;">
+                <div class="d-flex justify-content-between align-items-center mb-2.5 flex-wrap gap-2">
+                  <h6 class="fw-bold mb-0 text-success d-flex align-items-center gap-2">
+                    <i class="bi bi-activity fs-5"></i>
+                    <span>Hasil Skrining Fisik &amp; Antropometri Santri (UKS)</span>
+                  </h6>
+                  <span class="badge bg-success text-white px-2.5 py-1 rounded-pill" id="uks-tgl-pemeriksaan">-</span>
+                </div>
+                <div class="row g-2 text-center">
+                  <div class="col-6 col-md-3">
+                    <div class="p-2.5 rounded-3 bg-white border shadow-2xs">
+                      <div class="text-muted small fw-semibold" style="font-size: 11px;">Berat Badan (BB)</div>
+                      <h4 class="fw-bold text-dark mb-0"><span id="uks-detail-bb">-</span> <small class="fs-6 fw-normal text-muted">kg</small></h4>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="p-2.5 rounded-3 bg-white border shadow-2xs">
+                      <div class="text-muted small fw-semibold" style="font-size: 11px;">Tinggi Badan (TB)</div>
+                      <h4 class="fw-bold text-dark mb-0"><span id="uks-detail-tb">-</span> <small class="fs-6 fw-normal text-muted">cm</small></h4>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="p-2.5 rounded-3 bg-white border shadow-2xs">
+                      <div class="text-muted small fw-semibold" style="font-size: 11px;">Indeks Massa Tubuh (IMT)</div>
+                      <h4 class="fw-bold text-success mb-0" id="uks-detail-imt">-</h4>
+                      <span class="badge bg-success-subtle text-success border border-success-subtle py-0.5 px-1.5" style="font-size: 10px;" id="uks-detail-kat-imt">Normal / Ideal</span>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="p-2.5 rounded-3 bg-white border shadow-2xs">
+                      <div class="text-muted small fw-semibold" style="font-size: 11px;">Tensi &amp; Suhu Tubuh</div>
+                      <div class="fw-bold text-dark mt-1" style="font-size: 13.5px;" id="uks-detail-tensi-gol">-</div>
+                      <small class="text-muted" style="font-size: 10.5px;" id="uks-detail-suhu">Suhu: -</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- RIWAYAT KUNJUNGAN SAKIT UKS -->
               <div class="card border-0 shadow-2xs rounded-3 bg-white p-3">
-                <h6 class="fw-bold mb-3 text-dark"><i class="bi bi-heart-pulse-fill text-danger me-1"></i>Riwayat Pemeriksaan &amp; Kesehatan UKS</h6>
+                <h6 class="fw-bold mb-3 text-dark"><i class="bi bi-heart-pulse-fill text-danger me-1"></i>Riwayat Pemeriksaan &amp; Kunjungan Sakit UKS</h6>
                 <div id="modal-uks-list" class="small">
                   <!-- Populated dynamically -->
                 </div>
@@ -614,6 +725,7 @@
           </div>
         </div>
 
+        </div> <!-- Tutup #modal-zoom-container -->
       </div>
     </div>
   </div>
@@ -640,7 +752,8 @@
     // State Aplikasi Publik
     var publicState = {
       targetKelas: '',
-      targetBulan: '',
+      targetBulan: 'REALTIME',
+      isRealtime: true,
       targetNis: '',
       allSantri: [],
       filteredSantri: [],
@@ -650,6 +763,41 @@
       sortCol: 1,
       sortAsc: true
     };
+
+    // Zoom & Fullscreen Controls
+    var currentModalZoom = 1.0;
+    function zoomDetailModal(delta) {
+      if (delta === 'reset') {
+        currentModalZoom = 1.0;
+      } else {
+        currentModalZoom = Math.min(1.8, Math.max(0.6, Math.round((currentModalZoom + delta) * 10) / 10));
+      }
+      var zoomValEl = document.getElementById('modal-zoom-val');
+      if (zoomValEl) zoomValEl.textContent = Math.round(currentModalZoom * 100) + '%';
+      
+      var zoomContent = document.getElementById('modal-zoom-container');
+      if (zoomContent) {
+        zoomContent.style.transform = 'scale(' + currentModalZoom + ')';
+        zoomContent.style.transformOrigin = 'top center';
+        if (currentModalZoom > 1.0) {
+          zoomContent.style.width = (100 / currentModalZoom) + '%';
+        } else {
+          zoomContent.style.width = '100%';
+        }
+      }
+    }
+
+    function toggleDetailFullscreen() {
+      var modalDialog = document.querySelector('#modalPublicDetailSantri .modal-dialog');
+      var btn = document.getElementById('btn-modal-fullscreen');
+      if (!modalDialog) return;
+      
+      var isFull = modalDialog.classList.toggle('modal-fullscreen');
+      if (btn) {
+        btn.innerHTML = isFull ? '<i class="bi bi-fullscreen-exit"></i>' : '<i class="bi bi-arrows-fullscreen"></i>';
+        btn.title = isFull ? 'Keluar Layar Penuh' : 'Layar Penuh (Full Screen)';
+      }
+    }
 
     function showToast(msg, type) {
       var toastEl = document.getElementById('appToast');
@@ -725,28 +873,93 @@
       var targetB = urlParams.get('bulan') || urlParams.get('periode') || '';
       var targetNis = urlParams.get('nis') || urlParams.get('laporan') || urlParams.get('id') || '';
 
-      // Default jika bulan tidak diberikan: ambil bulan berjalan
-      if (!targetB) {
-        var now = new Date();
-        targetB = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+      if (targetB && targetB.toUpperCase() !== 'REALTIME') {
+        publicState.targetBulan = targetB;
+        publicState.isRealtime = false;
+      } else {
+        publicState.targetBulan = 'REALTIME';
+        publicState.isRealtime = true;
       }
 
       publicState.targetKelas = targetK;
-      publicState.targetBulan = targetB;
       publicState.targetNis = targetNis;
 
-      // Update input bulan & label header
-      var selBulan = document.getElementById('input-select-bulan');
-      if (selBulan) selBulan.value = targetB;
+      updateRealtimeUiButton();
 
-      formatBulanHeader(targetB);
+      var selBulan = document.getElementById('input-select-bulan');
+      if (selBulan) {
+        if (!publicState.isRealtime && publicState.targetBulan) {
+          selBulan.value = publicState.targetBulan;
+        } else {
+          var now = new Date();
+          selBulan.value = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+        }
+      }
+
+      formatBulanHeader(publicState.targetBulan);
       document.getElementById('label-kelas-hero').textContent = targetK ? targetK : 'Seluruh Kelas';
       document.getElementById('label-table-kelas').textContent = targetK ? targetK : 'Semua';
 
       loadClassReportData();
     });
 
+    // Auto-polling data setiap 30 detik untuk sinkronisasi realtime tanpa refresh halaman
+    var autoPollInterval = setInterval(function() {
+      if (!document.hidden && publicState.targetKelas) {
+        loadClassReportData(true); // silent background reload
+      }
+    }, 30000);
+
+    // Tangani saat tab kembali aktif
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden && publicState.targetKelas) {
+        loadClassReportData(true);
+      }
+    });
+
+    function toggleRealtimeMode() {
+      publicState.isRealtime = !publicState.isRealtime;
+      if (publicState.isRealtime) {
+        publicState.targetBulan = 'REALTIME';
+        showToast('Mode Real-Time Aktif: Memuat data terkini secara langsung.', 'success');
+      } else {
+        var selBulan = document.getElementById('input-select-bulan');
+        publicState.targetBulan = (selBulan && selBulan.value) ? selBulan.value : '2026-10';
+        showToast('Mode Bulanan Aktif: Periode ' + formatBulanHeader(publicState.targetBulan), 'info');
+      }
+      updateRealtimeUiButton();
+      formatBulanHeader(publicState.targetBulan);
+      loadClassReportData();
+    }
+
+    function updateRealtimeUiButton() {
+      var btn = document.getElementById('btn-toggle-realtime');
+      var txt = document.getElementById('btn-realtime-text');
+      if (!btn) return;
+      if (publicState.isRealtime) {
+        btn.className = 'btn btn-sm btn-success fw-bold rounded-pill px-3 py-1.5 shadow-2xs d-inline-flex align-items-center gap-1.5';
+        if (txt) txt.textContent = 'Mode Real-Time Aktif';
+      } else {
+        btn.className = 'btn btn-sm btn-outline-secondary fw-bold rounded-pill px-3 py-1.5 shadow-2xs d-inline-flex align-items-center gap-1.5';
+        if (txt) txt.textContent = 'Beralih ke Real-Time';
+      }
+    }
+
+    function manualRefreshRealtime() {
+      var spin = document.getElementById('icon-refresh-sync');
+      if (spin) spin.classList.add('bi-spin');
+      loadClassReportData(false);
+      setTimeout(function() {
+        if (spin) spin.classList.remove('bi-spin');
+      }, 1000);
+    }
+
     function formatBulanHeader(bulanVal) {
+      if (!bulanVal || bulanVal === 'REALTIME') {
+        var strRealtime = "Real-Time (Terbaru / Hari Ini)";
+        document.getElementById('label-bulan-hero').innerHTML = '<i class="bi bi-lightning-charge-fill text-warning me-1"></i>' + strRealtime;
+        return strRealtime;
+      }
       var bulanNamaList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
       var parts = (bulanVal || '').split('-');
       var str = bulanVal;
@@ -760,23 +973,28 @@
 
     function onBulanUserChange(val) {
       if (!val) return;
+      publicState.isRealtime = false;
       publicState.targetBulan = val;
+      updateRealtimeUiButton();
       formatBulanHeader(val);
       loadClassReportData();
     }
 
     // Memuat Data Laporan Kelas dari Server GAS via JSONP
-    function loadClassReportData() {
-      document.getElementById('table-loading-state').style.display = 'block';
-      document.getElementById('table-error-state').classList.add('d-none');
-      document.getElementById('table-content-state').style.display = 'none';
-      showPillLoading('Sinkronisasi Laporan ' + (publicState.targetKelas || 'Kelas') + '...');
+    function loadClassReportData(silent) {
+      if (!silent) {
+        document.getElementById('table-loading-state').style.display = 'block';
+        document.getElementById('table-error-state').classList.add('d-none');
+        document.getElementById('table-content-state').style.display = 'none';
+        showPillLoading('Sinkronisasi Laporan ' + (publicState.targetKelas || 'Kelas') + '...');
+      }
 
-      var reqUrl = GAS_BACKEND_URL + '?api=laporan_kelas&bulan=' + encodeURIComponent(publicState.targetBulan) + '&kelas=' + encodeURIComponent(publicState.targetKelas);
+      var bParam = publicState.isRealtime ? 'REALTIME' : encodeURIComponent(publicState.targetBulan);
+      var reqUrl = GAS_BACKEND_URL + '?api=laporan_kelas&bulan=' + bParam + '&kelas=' + encodeURIComponent(publicState.targetKelas) + '&_t=' + Date.now();
 
       jsonpRequest(reqUrl)
         .then(function(res) {
-          hidePillLoading();
+          if (!silent) hidePillLoading();
           document.getElementById('table-loading-state').style.display = 'none';
 
           if (res && res.success && res.data) {
@@ -813,6 +1031,12 @@
             renderSantriRows(publicState.filteredSantri);
             document.getElementById('table-content-state').style.display = 'block';
 
+            // Update timestamp sinkronisasi
+            var nowTime = new Date();
+            var timeStr = String(nowTime.getHours()).padStart(2, '0') + ':' + String(nowTime.getMinutes()).padStart(2, '0') + ' WIB';
+            var syncEl = document.getElementById('last-sync-time');
+            if (syncEl) syncEl.textContent = 'Sinkron: ' + timeStr;
+
             // Jika ada parameter NIS pada URL, langsung buka rapor santri tersebut
             if (publicState.targetNis) {
               var targetS = publicState.allSantri.find(function(s) {
@@ -823,13 +1047,15 @@
               }
             }
           } else {
-            showErrorState(res ? res.message : 'Tidak ada data laporan untuk kelas ini.');
+            if (!silent) showErrorState(res ? res.message : 'Tidak ada data laporan untuk kelas ini.');
           }
         })
         .catch(function(err) {
-          hidePillLoading();
-          document.getElementById('table-loading-state').style.display = 'none';
-          showErrorState(err.message || 'Koneksi ke server terputus.');
+          if (!silent) {
+            hidePillLoading();
+            document.getElementById('table-loading-state').style.display = 'none';
+            showErrorState(err.message || 'Koneksi ke server terputus.');
+          }
         });
     }
 
@@ -919,54 +1145,65 @@
         var kesBadgeClass = s.kesehatan ? s.kesehatan.badgeClass : 'bg-success';
         var kesDetail = s.kesehatan ? s.kesehatan.detail : 'Kondisi sehat bugar';
 
+        // Badge Antropometri Fisik UKS jika tersedia
+        var bbTbBadge = '';
+        if (s.kesehatan && s.kesehatan.beratBadan > 0 && s.kesehatan.tinggiBadan > 0) {
+          bbTbBadge = '<span class="badge bg-light text-dark border mt-0.5" style="font-size: 10px;" title="Tinggi Badan & Berat Badan UKS">' +
+                        '<i class="bi bi-speedometer2 text-primary me-0.5"></i>' + s.kesehatan.beratBadan + ' kg / ' + s.kesehatan.tinggiBadan + ' cm' +
+                      '</span>';
+        }
+
         html += 
           '<tr>' +
             '<td class="text-center fw-medium text-muted">' + (idx + 1) + '</td>' +
             '<td>' +
-              '<div class="d-flex align-items-center gap-2.5">' +
-                '<img src="' + avatarSrc + '" class="rounded-circle border shadow-2xs" style="width: 38px; height: 38px; object-fit: cover;" onerror="this.onerror=null; this.src=\'https://ui-avatars.com/api/?name=' + encodeURIComponent(s.nama) + '&background=065f46&color=fff&size=64\';">' +
-                '<div>' +
-                  '<div class="fw-bold text-dark cursor-pointer text-truncate" style="max-width: 210px;" onclick="openPublicDetailSantri(\'' + s.id + '\')">' +
+              '<div class="d-flex align-items-center gap-2">' +
+                '<img src="' + avatarSrc + '" class="rounded-circle border shadow-2xs flex-shrink-0" style="width: 32px; height: 32px; object-fit: cover;" onerror="this.onerror=null; this.src=\'https://ui-avatars.com/api/?name=' + encodeURIComponent(s.nama) + '&background=065f46&color=fff&size=64\';">' +
+                '<div style="min-width: 0;">' +
+                  '<div class="fw-bold text-dark cursor-pointer text-truncate" style="max-width: 175px;" onclick="openPublicDetailSantri(\'' + s.id + '\')" title="' + escapeHtml(s.nama) + '">' +
                     escapeHtml(s.nama) +
                   '</div>' +
-                  '<div class="text-muted small" style="font-size: 11px;">' +
+                  '<div class="text-muted small" style="font-size: 10.5px;">' +
                     'NIS: ' + escapeHtml(s.nis) +
                   '</div>' +
                 '</div>' +
               '</div>' +
             '</td>' +
             '<td>' +
-              '<span class="badge bg-light text-dark border">' +
+              '<span class="badge bg-light text-dark border px-2 py-1">' +
                 '<i class="bi bi-door-open me-1 text-warning"></i>' + escapeHtml(s.kamar || '-') +
               '</span>' +
             '</td>' +
             '<td>' +
-              '<div class="d-flex align-items-center gap-1.5 mb-1">' +
+              '<div class="d-flex align-items-center gap-1 mb-0.5">' +
                 '<span class="badge ' + ibadahBadgeClass + ' fw-bold">' + ibadahGrade + '</span>' +
-                '<span class="fw-semibold text-dark" style="font-size: 12px;">' + escapeHtml(ibadahPredikat) + '</span>' +
+                '<span class="fw-semibold text-dark text-truncate" style="font-size: 11.5px; max-width: 130px;">' + escapeHtml(ibadahPredikat) + '</span>' +
               '</div>' +
-              '<div class="text-muted small text-truncate" style="max-width: 200px; font-size: 11px;" title="' + escapeHtml(ibadahRingkas) + '">' +
+              '<div class="text-muted small text-truncate" style="max-width: 165px; font-size: 10.5px;" title="' + escapeHtml(ibadahRingkas) + '">' +
                 escapeHtml(ibadahRingkas) +
               '</div>' +
             '</td>' +
             '<td>' +
-              '<span class="badge ' + disBadgeClass + ' fw-semibold py-1 px-2">' +
+              '<span class="badge ' + disBadgeClass + ' fw-semibold py-1 px-1.5" style="font-size: 11px;">' +
                 escapeHtml(disStatus) +
               '</span>' +
             '</td>' +
             '<td>' +
-              '<span class="badge ' + adabBadgeClass + ' fw-semibold py-1 px-2">' +
+              '<span class="badge ' + adabBadgeClass + ' fw-semibold py-1 px-1.5" style="font-size: 11px;">' +
                 escapeHtml(adabStatus) +
               '</span>' +
             '</td>' +
             '<td>' +
-              '<span class="badge ' + kesBadgeClass + ' fw-semibold py-1 px-2" title="' + escapeHtml(kesDetail) + '">' +
-                '<i class="bi bi-heart-pulse me-1"></i>' + escapeHtml(kesStatus) +
-              '</span>' +
+              '<div class="d-flex flex-column gap-0.5">' +
+                '<span class="badge ' + kesBadgeClass + ' fw-semibold py-1 px-1.5" style="font-size: 11px;" title="' + escapeHtml(kesDetail) + '">' +
+                  '<i class="bi bi-heart-pulse me-1"></i>' + escapeHtml(kesStatus) +
+                '</span>' +
+                bbTbBadge +
+              '</div>' +
             '</td>' +
             '<td class="text-center">' +
-              '<button type="button" class="btn btn-xs btn-primary fw-bold rounded-pill px-2.5 py-1 shadow-2xs" onclick="openPublicDetailSantri(\'' + s.id + '\')">' +
-                '<i class="bi bi-eye me-1"></i> Rapor' +
+              '<button type="button" class="btn btn-xs btn-primary fw-bold rounded-pill px-2.5 py-1 shadow-2xs text-nowrap" onclick="openPublicDetailSantri(\'' + s.id + '\')">' +
+                '<i class="bi bi-eye me-1"></i>Rapor' +
               '</button>' +
             '</td>' +
           '</tr>';
@@ -1026,7 +1263,8 @@
 
       showPillLoading('Memuat Rincian ' + santriNama + '...');
 
-      var reqUrl = GAS_BACKEND_URL + '?api=detail_santri&id=' + encodeURIComponent(santriId) + '&bulan=' + encodeURIComponent(publicState.targetBulan);
+      var bParam = publicState.isRealtime ? 'REALTIME' : encodeURIComponent(publicState.targetBulan);
+      var reqUrl = GAS_BACKEND_URL + '?api=detail_santri&id=' + encodeURIComponent(santriId) + '&bulan=' + bParam + '&_t=' + Date.now();
 
       jsonpRequest(reqUrl)
         .then(function(res) {
@@ -1048,8 +1286,8 @@
 
     function populatePublicModalDetail(data) {
       var p = data.profile || {};
-      var ov = data.overall || {};
-      var pilars = data.pilars || {};
+      var ov = data.overallSummary || data.overall || {};
+      var pilars = data.pilar4 || data.pilars || {};
 
       // Profil
       document.getElementById('modal-santri-nama').textContent = p.nama || '-';
@@ -1058,8 +1296,8 @@
       document.getElementById('modal-santri-kamar').textContent = p.kamar || '-';
       document.getElementById('modal-santri-wali').textContent = p.namaWali || 'Orang Tua / Wali';
       document.getElementById('modal-santri-kota').textContent = p.kotaAsal || '-';
-      document.getElementById('modal-santri-musyrif').textContent = p.musyrifNama || '-';
-      document.getElementById('modal-santri-periode').textContent = p.bulanStr || p.bulan || '-';
+      document.getElementById('modal-santri-musyrif').textContent = (data.musyrif && data.musyrif.nama) ? data.musyrif.nama : (p.musyrifNama || '-');
+      document.getElementById('modal-santri-periode').textContent = publicState.isRealtime ? 'Real-Time (Terbaru)' : (p.bulanStr || p.bulan || '-');
 
       var fotoEl = document.getElementById('modal-santri-foto');
       fotoEl.src = p.foto ? p.foto : ('https://ui-avatars.com/api/?name=' + encodeURIComponent(p.nama) + '&background=065f46&color=fff&size=128');
@@ -1076,11 +1314,13 @@
       // Musyrif WhatsApp link
       var waLink = document.getElementById('modal-musyrif-wa-link');
       var waText = document.getElementById('modal-musyrif-wa-text');
-      if (p.musyrifWa) {
-        var cleanWa = String(p.musyrifWa).replace(/\D/g, '');
+      var musWa = (data.musyrif && data.musyrif.noWa) ? data.musyrif.noWa : p.musyrifWa;
+      var musNama = (data.musyrif && data.musyrif.nama) ? data.musyrif.nama : p.musyrifNama;
+      if (musWa) {
+        var cleanWa = String(musWa).replace(/\D/g, '');
         if (cleanWa.startsWith('0')) cleanWa = '62' + cleanWa.substring(1);
-        waText.textContent = 'WA: ' + p.musyrifWa;
-        waLink.href = 'https://wa.me/' + cleanWa + '?text=' + encodeURIComponent("Assalamu'alaikum Ustadz " + p.musyrifNama + ", saya orang tua dari " + p.nama + " (" + p.nis + " - " + p.kelas + "). Ingin berkonsultasi mengenai rapor ananda.");
+        waText.textContent = 'WA: ' + musWa;
+        waLink.href = 'https://wa.me/' + cleanWa + '?text=' + encodeURIComponent("Assalamu'alaikum Ustadz " + musNama + ", saya orang tua dari " + p.nama + " (" + p.nis + " - " + p.kelas + "). Ingin berkonsultasi mengenai rapor ananda.");
         waLink.classList.remove('d-none');
       } else {
         waLink.classList.add('d-none');
@@ -1105,19 +1345,19 @@
 
       // 1. Rincian Amal Yaumi
       var ay = data.amalYaumi || {};
-      document.getElementById('modal-amalyaumi-periode').textContent = ay.periode || p.bulanStr || '-';
-      var rList = ay.rincianIbadah || [];
+      document.getElementById('modal-amalyaumi-periode').textContent = ay.periode || p.bulanStr || (publicState.isRealtime ? 'Terbaru' : '-');
+      var rList = ay.rincianIbadah || data.amalanResults || [];
       var ayContainer = document.getElementById('modal-amalyaumi-list');
       if (rList.length === 0) {
-        ayContainer.innerHTML = '<div class="alert alert-light border small text-muted text-center py-3">Catatan amal yaumi bulan ini tercatat sangat baik dan tertib di masjid asrama.</div>';
+        ayContainer.innerHTML = '<div class="alert alert-light border small text-muted text-center py-3">Catatan amal yaumi tercatat sangat baik dan tertib di masjid asrama.</div>';
       } else {
         var ayHtml = '<div class="row g-2">';
         rList.forEach(function(item) {
           ayHtml += 
             '<div class="col-12 col-md-6">' +
               '<div class="p-2.5 rounded-3 bg-light border d-flex justify-content-between align-items-center">' +
-                '<span class="fw-semibold text-dark">' + escapeHtml(item.nama) + '</span>' +
-                '<span class="badge bg-success-subtle text-success border border-success-subtle">' + escapeHtml(item.capaian || 'Terlaksana') + '</span>' +
+                '<span class="fw-semibold text-dark">' + escapeHtml(item.nama || item.kegiatan) + '</span>' +
+                '<span class="badge bg-success-subtle text-success border border-success-subtle">' + escapeHtml(item.capaian || item.status || 'Terlaksana') + '</span>' +
               '</div>' +
             '</div>';
         });
@@ -1125,12 +1365,39 @@
         ayContainer.innerHTML = ayHtml;
       }
 
-      // 2. Catatan Medis UKS
+      // 2. Catatan Medis UKS & Antropometri Fisik
       var kes = data.kesehatan || {};
+      var fisik = kes.fisikTerkini || {};
+      var bbEl = document.getElementById('uks-detail-bb');
+      var tbEl = document.getElementById('uks-detail-tb');
+      var imtEl = document.getElementById('uks-detail-imt');
+      var katEl = document.getElementById('uks-detail-kat-imt');
+      var tensiEl = document.getElementById('uks-detail-tensi-gol');
+      var suhuEl = document.getElementById('uks-detail-suhu');
+      var tglFisikEl = document.getElementById('uks-tgl-pemeriksaan');
+
+      if (fisik && (fisik.beratBadan > 0 || fisik.tinggiBadan > 0)) {
+        if (bbEl) bbEl.textContent = fisik.beratBadan || '-';
+        if (tbEl) tbEl.textContent = fisik.tinggiBadan || '-';
+        if (imtEl) imtEl.textContent = fisik.imt || '-';
+        if (katEl) katEl.textContent = fisik.kategoriImt || 'Normal / Ideal';
+        if (tensiEl) tensiEl.textContent = (fisik.tensi && fisik.tensi !== '-') ? ('Tensi: ' + fisik.tensi) : ('Gol. Darah: ' + (fisik.golDarah || '-'));
+        if (suhuEl) suhuEl.textContent = (fisik.suhu && fisik.suhu !== '-') ? ('Suhu: ' + fisik.suhu + '°C') : 'Kondisi fisik terpantau baik';
+        if (tglFisikEl) tglFisikEl.textContent = 'Pemeriksaan: ' + (fisik.tanggal || 'Terkini');
+      } else {
+        if (bbEl) bbEl.textContent = '-';
+        if (tbEl) tbEl.textContent = '-';
+        if (imtEl) imtEl.textContent = '-';
+        if (katEl) katEl.textContent = 'Skrining Berkala UKS';
+        if (tensiEl) tensiEl.textContent = 'Sehat Bugar';
+        if (suhuEl) suhuEl.textContent = 'Dalam Pemantauan UKS';
+        if (tglFisikEl) tglFisikEl.textContent = 'Pemeriksaan Rutin';
+      }
+
       var uksRiwayat = kes.riwayat || [];
       var uksContainer = document.getElementById('modal-uks-list');
       if (uksRiwayat.length === 0) {
-        uksContainer.innerHTML = '<div class="alert alert-success-subtle border border-success-subtle text-success p-3 text-center mb-0"><i class="bi bi-shield-check me-1 fs-5"></i>Alhamdulillah, ananda dalam keadaan sehat wal afiat dan tidak memiliki catatan sakit di UKS pada bulan ini.</div>';
+        uksContainer.innerHTML = '<div class="alert alert-success-subtle border border-success-subtle text-success p-3 text-center mb-0"><i class="bi bi-shield-check me-1 fs-5"></i>Alhamdulillah, ananda dalam keadaan sehat wal afiat dan tidak memiliki catatan sakit di UKS pada periode ini.</div>';
       } else {
         var uksHtml = '<div class="list-group list-group-flush border rounded-3">';
         uksRiwayat.forEach(function(u) {
