@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Laporan Perkembangan Santri - Ponpes Imam Syafi'i Brebes</title>
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Laporan Perkembangan Santri - Ponpes Imam Syafi'i Brebes">
+  <meta property="og:description" content="Monitoring komprehensif perkembangan ibadah (Amal Yaumi), kedisiplinan, adab, catatan medis UKS, dan buku penghubung wali santri.">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/d/1gHUjCj4lXfwJn1Fj11O1peAVjT3Xosqh">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="./logo.png">
+  <link rel="apple-touch-icon" href="./logo.png">
+  
+  <!-- Bootstrap 5 & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #059669;
+      --primary-dark: #047857;
+      --primary-light: #ecfdf5;
+      --accent: #f59e0b;
+      --bg-body: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 70px;
+    }
+
+    .hero-header {
+      background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #059669 100%);
+      color: white;
+      padding: 35px 20px 70px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-header::after {
+      content: '';
+      position: absolute;
+      bottom: -30px;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: var(--bg-body);
+      border-radius: 40px 40px 0 0;
+    }
+
+    .arabic-bismillah {
+      font-family: 'Amiri', serif;
+      font-size: 1.6rem;
+      opacity: 0.95;
+      margin-bottom: 6px;
+      color: #a7f3d0;
+    }
+
+    .main-container {
+      max-width: 1140px;
+      margin: -45px auto 0;
+      padding: 0 16px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .card-custom {
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e2e8f0;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .badge-grade-A { background-color: #d1fae5; color: #047857; border: 1px solid #a7f3d0; font-weight: 700; }
+    .badge-grade-B { background-color: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 700; }
+    .badge-grade-C { background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-weight: 700; }
+    .badge-grade-D { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; font-weight: 700; }
+
+    /* Floating Loading Indicator (Non-blocking pill) */
+    #public-loading-pill {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-60px);
+      background: rgba(15, 23, 42, 0.92);
+      color: #ffffff;
+      padding: 9px 22px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #public-loading-pill.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .cursor-pointer { cursor: pointer; }
+    .table > :not(caption) > * > * { padding: 0.75rem 0.75rem; }
+
+    /* Custom Toast */
+    .toast-container-custom {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1080;
+    }
+
+    /* Print styling */
+    @media print {
+      body { background-color: #fff; padding-bottom: 0; }
+      .hero-header { padding: 20px; background: #047857 !important; color: white !important; -webkit-print-color-adjust: exact; }
+      .no-print, .btn, #public-loading-pill { display: none !important; }
+      .card-custom { box-shadow: none; border: 1px solid #ccc; }
+      .modal { position: static; display: block; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Loading Pill -->
+  <div id="public-loading-pill">
+    <div class="spinner-border spinner-border-sm text-success" role="status"></div>
+    <span id="loading-pill-text">Memuat Data Laporan...</span>
+  </div>
+
+  <!-- HERO HEADER -->
+  <div class="hero-header text-center">
+    <div class="arabic-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+    <div class="d-inline-flex align-items-center gap-2 mb-2 px-3 py-1 rounded-pill bg-white bg-opacity-10 border border-white border-opacity-20 text-white small">
+      <i class="bi bi-patch-check-fill text-warning"></i>
+      <span>Pondok Pesantren Imam Syafi'i Brebes</span>
+    </div>
+    <h2 class="fw-extrabold mb-1 tracking-tight text-white">Laporan Perkembangan Santri</h2>
+    <p class="text-white-50 small mb-3" style="max-width: 650px; margin: 0 auto;">
+      Monitoring komprehensif perkembangan ibadah (Amal Yaumi), kedisiplinan, adab &amp; akhlaq, serta buku penghubung wali santri.
+    </p>
+
+    <!-- BADGE IDENTITAS KELAS & BULAN -->
+    <div class="d-flex flex-wrap justify-content-center gap-2 mt-2">
+      <span class="badge bg-white text-dark px-3 py-2 rounded-pill fw-bold shadow-sm fs-6" id="hero-badge-kelas">
+        <i class="bi bi-mortarboard-fill text-primary me-1"></i> <span id="label-kelas-hero">Memuat Kelas...</span>
+      </span>
+      <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold shadow-sm fs-6" id="hero-badge-bulan">
+        <i class="bi bi-calendar3 me-1"></i> <span id="label-bulan-hero">Memuat Periode...</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <div class="main-container">
+
+    <!-- MUSYRIF CARD & QUICK ACTION BAR -->
+    <div class="card-custom p-3 p-md-4 mb-3">
+      <div class="row align-items-center g-3">
+        <div class="col-12 col-md-6 d-flex align-items-center gap-3">
+          <div class="rounded-circle bg-success-subtle text-success p-2.5 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px;">
+            <i class="bi bi-person-badge-fill fs-4"></i>
+          </div>
+          <div>
+            <div class="text-muted small fw-semibold">Musyrif Pendamping Kelas</div>
+            <h6 class="fw-bold mb-0 text-dark" id="musyrif-nama">Memuat Musyrif...</h6>
+            <div class="small text-muted" id="musyrif-kontak-info">
+              <span id="musyrif-telp-text">-</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 text-md-end">
+          <div class="d-inline-flex gap-2 flex-wrap">
+            <a href="#" id="btn-wa-musyrif-kelas" target="_blank" class="btn btn-sm btn-success fw-bold px-3 py-1.5 rounded-pill shadow-xs d-none">
+              <i class="bi bi-whatsapp me-1"></i> Hubungi Musyrif
+            </a>
+            <button type="button" class="btn btn-sm btn-outline-secondary fw-semibold px-3 py-1.5 rounded-pill shadow-xs" onclick="copyCurrentClassLink()">
+              <i class="bi bi-share me-1"></i> Salin Link
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-primary fw-semibold px-3 py-1.5 rounded-pill shadow-xs" onclick="window.print()">
+              <i class="bi bi-printer me-1"></i> Cetak PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTER / SEARCH & STATS ROW -->
+    <div class="row g-2 mb-3">
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="text-muted small fw-medium" style="font-size: 11px;">Total Santri</div>
+          <h5 class="fw-bold mb-0 text-dark" id="stat-total-santri">0 Santri</h5>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="text-muted small fw-medium" style="font-size: 11px;">Ibadah Mumtaz (A)</div>
+          <h5 class="fw-bold mb-0 text-success" id="stat-ibadah-mumtaz">0 Santri</h5>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="text-muted small fw-medium" style="font-size: 11px;">Catatan UKS Bulan Ini</div>
+          <h5 class="fw-bold mb-0 text-dark" id="stat-catatan-uks">0 Santri</h5>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="text-muted small fw-medium" style="font-size: 11px;">Kedisiplinan Tertib</div>
+          <h5 class="fw-bold mb-0 text-info" id="stat-disiplin-tertib">0 Santri</h5>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEARCH BAR -->
+    <div class="card-custom p-3 mb-3">
+      <div class="row g-2 align-items-center">
+        <div class="col-12 col-md-8">
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+            <input type="text" id="input-search-santri" class="form-control border-start-0" placeholder="Ketik nama ananda atau NIS santri untuk pencarian instan..." onkeyup="filterSantriTable(this.value)">
+          </div>
+        </div>
+        <div class="col-12 col-md-4 text-md-end">
+          <div class="d-flex align-items-center justify-content-md-end gap-2">
+            <span class="small text-muted fw-semibold">Pilih Periode:</span>
+            <input type="month" id="input-select-bulan" class="form-control form-control-sm" style="max-width: 170px;" onchange="onBulanUserChange(this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLE / LIST SANTRI -->
+    <div class="card-custom p-0 overflow-hidden mb-4">
+      <div class="p-3 bg-light border-bottom d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div class="fw-bold text-dark d-flex align-items-center gap-2">
+          <i class="bi bi-people-fill text-success"></i>
+          <span>Daftar Perkembangan Santri Kelas <span id="label-table-kelas">-</span></span>
+        </div>
+        <div class="small text-muted">
+          Menampilkan <span id="count-santri-filtered" class="fw-bold text-dark">0</span> santri
+        </div>
+      </div>
+
+      <!-- State Loading -->
+      <div id="table-loading-state" class="text-center p-5">
+        <div class="spinner-border text-success mb-2" role="status"></div>
+        <h6 class="fw-bold text-dark">Mengambil Data Perkembangan Santri...</h6>
+        <p class="text-muted small mb-0">Sinkronisasi catatan ibadah amal yaumi, kedisiplinan, adab, dan catatan medis UKS.</p>
+      </div>
+
+      <!-- State Error -->
+      <div id="table-error-state" class="p-4 text-center d-none">
+        <div class="rounded-circle bg-danger-subtle text-danger p-3 mx-auto mb-2 d-inline-flex">
+          <i class="bi bi-exclamation-triangle fs-3"></i>
+        </div>
+        <h6 class="fw-bold text-dark" id="error-title">Gagal Memuat Laporan</h6>
+        <p class="text-muted small mb-3" id="error-desc">Terjadi kendala jaringan saat memuat data laporan.</p>
+        <button type="button" class="btn btn-sm btn-outline-danger fw-semibold rounded-pill px-3" onclick="loadClassReportData()">
+          <i class="bi bi-arrow-clockwise me-1"></i> Coba Lagi
+        </button>
+      </div>
+
+      <!-- Table Container -->
+      <div class="table-responsive" id="table-content-state" style="display: none;">
+        <table class="table table-hover align-middle mb-0" id="main-santri-table" style="font-size: 13px;">
+          <thead class="table-dark" style="background: #0f172a !important;">
+            <tr>
+              <th class="text-center py-2.5" style="width: 45px;">No</th>
+              <th class="py-2.5 cursor-pointer" onclick="sortTable(1)">Nama &amp; Identitas Santri <i class="bi bi-arrow-down-up small ms-1 opacity-50"></i></th>
+              <th class="py-2.5 cursor-pointer" onclick="sortTable(2)">Kamar / Asrama <i class="bi bi-arrow-down-up small ms-1 opacity-50"></i></th>
+              <th class="py-2.5 cursor-pointer" onclick="sortTable(3)">Ibadah (Amal Yaumi) <i class="bi bi-arrow-down-up small ms-1 opacity-50"></i></th>
+              <th class="py-2.5 cursor-pointer" onclick="sortTable(4)">Kedisiplinan <i class="bi bi-arrow-down-up small ms-1 opacity-50"></i></th>
+              <th class="py-2.5 cursor-pointer" onclick="sortTable(5)">Adab &amp; Akhlaq <i class="bi bi-arrow-down-up small ms-1 opacity-50"></i></th>
+              <th class="py-2.5 cursor-pointer" onclick="sortTable(6)">Kesehatan (UKS) <i class="bi bi-arrow-down-up small ms-1 opacity-50"></i></th>
+              <th class="text-center py-2.5" style="width: 130px;">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="santri-tbody" class="bg-white">
+            <!-- Populated dynamically via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="text-center text-muted small mt-4 pt-3 border-top">
+      <p class="mb-1">&copy; 2026 <strong>Pondok Pesantren Imam Syafi'i Brebes</strong></p>
+      <p class="text-muted" style="font-size: 11px;">Buku Penghubung Digital &amp; Monitoring Perkembangan Santri Terpadu Maisya</p>
+    </div>
+
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL DETAIL RAPOR PERKEMBANGAN SANTRI UNTUK WALI SANTRI    -->
+  <!-- ============================================================ -->
+  <div class="modal fade" id="modalPublicDetailSantri" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden; background: #f8fafc;">
+        
+        <!-- HEADER MODAL POSTER STYLE -->
+        <div class="modal-header border-0 text-white p-4" style="background: linear-gradient(135deg, #064e3b 0%, #065f46 60%, #047857 100%);">
+          <div class="w-100">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div class="d-flex align-items-center gap-2">
+                <div class="bg-white rounded-circle p-1.5 shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+                  <i class="bi bi-mortarboard-fill text-success fs-4"></i>
+                </div>
+                <div>
+                  <div class="text-warning small text-uppercase tracking-wider fw-bold" style="letter-spacing: 1px; font-size: 11px;">PONDOK PESANTREN IMAM SYAFI'I BREBES</div>
+                  <h5 class="fw-bold mb-0 text-white">RAPOR PERKEMBANGAN SANTRI</h5>
+                  <div class="text-light opacity-75 small fst-italic">"Bertumbuh dalam ibadah, kedisiplinan, dan akhlaq mulia."</div>
+                </div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-warning text-dark px-3 py-1.5 rounded-pill fw-bold shadow-2xs">
+                  <i class="bi bi-patch-check-fill me-1"></i>Dokumen Resmi Pengasuhan
+                </span>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+            </div>
+
+            <!-- KARTU SOROTAN IDENTITAS SANTRI -->
+            <div class="card border-0 rounded-3 text-dark p-3 shadow-sm" style="background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(8px);">
+              <div class="row align-items-center g-3">
+                <div class="col-auto">
+                  <div class="position-relative">
+                    <img id="modal-santri-foto" src="" class="rounded-circle border border-3 border-success shadow-sm" style="width: 78px; height: 78px; object-fit: cover;" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Santri&background=065f46&color=fff&size=128';">
+                    <span id="modal-badge-grade" class="position-absolute bottom-0 end-0 badge rounded-pill bg-success border border-white fw-bold shadow-2xs" style="font-size: 12px;">A</span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                    <h4 class="fw-bold text-dark mb-0" id="modal-santri-nama">-</h4>
+                    <span class="badge bg-primary text-white" id="modal-santri-kelas">-</span>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle" id="modal-santri-periode">-</span>
+                  </div>
+                  <div class="text-muted small d-flex flex-wrap gap-3">
+                    <span><i class="bi bi-qr-code text-primary me-1"></i>NIS: <strong id="modal-santri-nis">-</strong></span>
+                    <span><i class="bi bi-door-open text-warning me-1"></i>Kamar: <strong id="modal-santri-kamar">-</strong></span>
+                    <span><i class="bi bi-person-heart text-danger me-1"></i>Wali: <strong id="modal-santri-wali">-</strong></span>
+                    <span><i class="bi bi-geo-alt text-info me-1"></i>Kota: <strong id="modal-santri-kota">-</strong></span>
+                  </div>
+                  <div class="mt-2 text-muted small d-flex flex-wrap align-items-center gap-3">
+                    <span><i class="bi bi-person-badge text-success me-1"></i>Musyrif: <strong id="modal-santri-musyrif">-</strong></span>
+                    <a id="modal-musyrif-wa-link" href="#" target="_blank" class="badge bg-success text-white text-decoration-none d-none">
+                      <i class="bi bi-whatsapp me-1"></i><span id="modal-musyrif-wa-text">-</span>
+                    </a>
+                  </div>
+                </div>
+                <div class="col-12 col-md-auto text-md-end border-start-md ps-md-4">
+                  <div class="text-muted small fw-semibold" style="font-size: 11px;">PREDIKAT AMAL YAUMI</div>
+                  <h3 class="fw-bold text-success mb-0" id="modal-santri-percent">100%</h3>
+                  <span class="badge bg-warning text-dark fw-bold px-2 py-1" id="modal-santri-predikat">MUMTAZ (SANGAT BAIK)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BODY MODAL -->
+        <div class="modal-body p-3 p-md-4">
+          
+          <!-- 4 PILAR PEMBINAAN CARDS -->
+          <div class="row g-3 mb-4">
+            <!-- 1. IBADAH WAJIB -->
+            <div class="col-12 col-md-6 col-xl-3">
+              <div class="card h-100 border-0 shadow-2xs rounded-3 bg-white" style="border-top: 4px solid #059669 !important;">
+                <div class="card-body p-3">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-success text-white rounded-circle p-1.5"><i class="bi bi-bank"></i></span>
+                    <h6 class="fw-bold mb-0 text-success" style="font-size: 13.5px;">IBADAH WAJIB</h6>
+                  </div>
+                  <div class="mb-2">
+                    <span class="badge bg-success-subtle text-success border border-success-subtle mb-1" style="font-size: 11px;"><i class="bi bi-check2-circle me-1"></i>Sudah baik:</span>
+                    <p class="small text-dark mb-0" id="modal-pilar-wajib-baik" style="font-size: 12px; line-height: 1.4;">-</p>
+                  </div>
+                  <div>
+                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle mb-1" style="font-size: 11px;"><i class="bi bi-arrow-up-circle me-1"></i>Perlu dikuatkan:</span>
+                    <p class="small text-muted mb-0" id="modal-pilar-wajib-kuat" style="font-size: 12px; line-height: 1.4;">-</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. IBADAH SUNNAH -->
+            <div class="col-12 col-md-6 col-xl-3">
+              <div class="card h-100 border-0 shadow-2xs rounded-3 bg-white" style="border-top: 4px solid #0284c7 !important;">
+                <div class="card-body p-3">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-info text-white rounded-circle p-1.5"><i class="bi bi-moon-stars-fill"></i></span>
+                    <h6 class="fw-bold mb-0 text-primary" style="font-size: 13.5px;">IBADAH SUNNAH</h6>
+                  </div>
+                  <div class="mb-2">
+                    <span class="badge bg-success-subtle text-success border border-success-subtle mb-1" style="font-size: 11px;"><i class="bi bi-check2-circle me-1"></i>Sudah baik:</span>
+                    <p class="small text-dark mb-0" id="modal-pilar-sunnah-baik" style="font-size: 12px; line-height: 1.4;">-</p>
+                  </div>
+                  <div>
+                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle mb-1" style="font-size: 11px;"><i class="bi bi-arrow-up-circle me-1"></i>Perlu dikuatkan:</span>
+                    <p class="small text-muted mb-0" id="modal-pilar-sunnah-kuat" style="font-size: 12px; line-height: 1.4;">-</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. KEDISIPLINAN -->
+            <div class="col-12 col-md-6 col-xl-3">
+              <div class="card h-100 border-0 shadow-2xs rounded-3 bg-white" style="border-top: 4px solid #d97706 !important;">
+                <div class="card-body p-3">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-warning text-white rounded-circle p-1.5"><i class="bi bi-clock-history"></i></span>
+                    <h6 class="fw-bold mb-0 text-warning text-darken" style="font-size: 13.5px;">KEDISIPLINAN</h6>
+                  </div>
+                  <div class="mb-2">
+                    <span class="badge bg-success-subtle text-success border border-success-subtle mb-1" style="font-size: 11px;"><i class="bi bi-check2-circle me-1"></i>Sudah baik:</span>
+                    <p class="small text-dark mb-0" id="modal-pilar-disiplin-baik" style="font-size: 12px; line-height: 1.4;">-</p>
+                  </div>
+                  <div>
+                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle mb-1" style="font-size: 11px;"><i class="bi bi-arrow-up-circle me-1"></i>Perlu dikuatkan:</span>
+                    <p class="small text-muted mb-0" id="modal-pilar-disiplin-kuat" style="font-size: 12px; line-height: 1.4;">-</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. ADAB & AKHLAK -->
+            <div class="col-12 col-md-6 col-xl-3">
+              <div class="card h-100 border-0 shadow-2xs rounded-3 bg-white" style="border-top: 4px solid #e11d48 !important;">
+                <div class="card-body p-3">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-danger text-white rounded-circle p-1.5"><i class="bi bi-heart-fill"></i></span>
+                    <h6 class="fw-bold mb-0 text-danger" style="font-size: 13.5px;">ADAB &amp; AKHLAK</h6>
+                  </div>
+                  <div class="mb-2">
+                    <span class="badge bg-success-subtle text-success border border-success-subtle mb-1" style="font-size: 11px;"><i class="bi bi-check2-circle me-1"></i>Sudah baik:</span>
+                    <p class="small text-dark mb-0" id="modal-pilar-adab-baik" style="font-size: 12px; line-height: 1.4;">-</p>
+                  </div>
+                  <div>
+                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle mb-1" style="font-size: 11px;"><i class="bi bi-arrow-up-circle me-1"></i>Perlu dikuatkan:</span>
+                    <p class="small text-muted mb-0" id="modal-pilar-adab-kuat" style="font-size: 12px; line-height: 1.4;">-</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TABS RINCIAN DETAIL (AMAL YAUMI, UKS, DISIPLIN, BUKU PENGHUBUNG) -->
+          <ul class="nav nav-pills gap-2 mb-3 border-bottom pb-2" id="publicDetailTabs" role="tablist">
+            <li class="nav-item">
+              <button class="nav-link active btn-sm rounded-pill fw-bold" id="tab-btn-amalyaumi" onclick="switchPublicTab('amalyaumi')">
+                <i class="bi bi-calendar-check me-1"></i> Rincian Amal Yaumi
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link btn-sm rounded-pill fw-bold" id="tab-btn-uks" onclick="switchPublicTab('uks')">
+                <i class="bi bi-heart-pulse me-1"></i> Catatan Medis UKS
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link btn-sm rounded-pill fw-bold" id="tab-btn-disiplin" onclick="switchPublicTab('disiplin')">
+                <i class="bi bi-shield-check me-1"></i> Kedisiplinan &amp; Reward
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link btn-sm rounded-pill fw-bold" id="tab-btn-izin" onclick="switchPublicTab('izin')">
+                <i class="bi bi-door-open me-1"></i> Izin &amp; Telepon
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link btn-sm rounded-pill fw-bold text-success" id="tab-btn-penghubung" onclick="switchPublicTab('penghubung')">
+                <i class="bi bi-chat-left-dots-fill me-1"></i> Buku Penghubung Wali
+              </button>
+            </li>
+          </ul>
+
+          <!-- TAB CONTENT -->
+          <div class="tab-content" id="publicDetailTabContent">
+            
+            <!-- 1. TAB AMAL YAUMI -->
+            <div class="tab-pane fade show active" id="pane-amalyaumi">
+              <div class="card border-0 shadow-2xs rounded-3 bg-white p-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-journal-check text-success me-1"></i>Capaian Mutaba'ah Amal Yaumi Santri</h6>
+                  <span class="badge bg-light text-muted border" id="modal-amalyaumi-periode">-</span>
+                </div>
+                <div id="modal-amalyaumi-list" class="small">
+                  <!-- Populated dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. TAB UKS -->
+            <div class="tab-pane fade" id="pane-uks">
+              <div class="card border-0 shadow-2xs rounded-3 bg-white p-3">
+                <h6 class="fw-bold mb-3 text-dark"><i class="bi bi-heart-pulse-fill text-danger me-1"></i>Riwayat Pemeriksaan &amp; Kesehatan UKS</h6>
+                <div id="modal-uks-list" class="small">
+                  <!-- Populated dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. TAB DISIPLIN -->
+            <div class="tab-pane fade" id="pane-disiplin">
+              <div class="card border-0 shadow-2xs rounded-3 bg-white p-3">
+                <h6 class="fw-bold mb-3 text-dark"><i class="bi bi-shield-exclamation text-warning me-1"></i>Riwayat Poin Bimbingan &amp; Penghargaan</h6>
+                <div id="modal-disiplin-list" class="small">
+                  <!-- Populated dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. TAB IZIN & TELEPON -->
+            <div class="tab-pane fade" id="pane-izin">
+              <div class="card border-0 shadow-2xs rounded-3 bg-white p-3">
+                <h6 class="fw-bold mb-3 text-dark"><i class="bi bi-card-checklist text-primary me-1"></i>Riwayat Perizinan &amp; Layanan Wartel</h6>
+                <div id="modal-izin-list" class="small">
+                  <!-- Populated dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. TAB BUKU PENGHUBUNG WALI -->
+            <div class="tab-pane fade" id="pane-penghubung">
+              <div class="card border-0 shadow-2xs rounded-3 bg-white p-3">
+                <h6 class="fw-bold mb-2 text-dark"><i class="bi bi-chat-heart-fill text-success me-1"></i>Formulir Buku Penghubung Wali Santri</h6>
+                <p class="text-muted small mb-3">
+                  Ayah/Bunda dapat mengirimkan catatan perkembangan, konfirmasi kesehatan, atau pesan tarbiyah kepada Musyrif Pendamping. Pesan akan tersimpan di sistem pengasuhan.
+                </p>
+
+                <form id="form-tanggapan-wali" onsubmit="event.preventDefault(); submitTanggapanWali();">
+                  <div class="row g-2 mb-2">
+                    <div class="col-md-6">
+                      <label class="form-label small fw-bold mb-1">Nama Ayah/Bunda (Wali Santri)</label>
+                      <input type="text" id="input-pengirim-nama" class="form-control form-control-sm" placeholder="Contoh: Abu Fathin / Ibu Maryam" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label small fw-bold mb-1">Hubungan Keluarga</label>
+                      <select id="input-pengirim-hubungan" class="form-select form-select-sm">
+                        <option value="Ayah Kandung">Ayah Kandung</option>
+                        <option value="Ibu Kandung">Ibu Kandung</option>
+                        <option value="Wali Santri">Wali Santri</option>
+                        <option value="Keluarga">Keluarga</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label small fw-bold mb-1">Pesan / Catatan untuk Musyrif</label>
+                    <textarea id="input-pengirim-pesan" class="form-control form-control-sm" rows="3" placeholder="Tuliskan catatan, respon laporan, atau pesan untuk ananda..." required></textarea>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div class="small text-muted">
+                      <i class="bi bi-info-circle text-primary me-1"></i>Pesan langsung diteruskan ke catatan santri.
+                    </div>
+                    <button type="submit" id="btn-submit-tanggapan" class="btn btn-sm btn-success fw-bold px-4 rounded-pill shadow-xs">
+                      <i class="bi bi-send-fill me-1"></i> Kirim Catatan Wali
+                    </button>
+                  </div>
+                </form>
+
+                <!-- Riwayat Catatan Sebelumnya -->
+                <hr class="my-4">
+                <h6 class="fw-bold mb-2 text-dark small"><i class="bi bi-clock-history me-1"></i>Riwayat Catatan Buku Penghubung</h6>
+                <div id="modal-catatan-wali-list" class="small">
+                  <p class="text-muted fst-italic mb-0">Belum ada catatan atau tanggapan dari wali santri sebelumnya.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- FOOTER MODAL -->
+        <div class="modal-footer bg-light border-top p-3 d-flex justify-content-between align-items-center">
+          <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">
+            Tutup
+          </button>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-sm btn-outline-success fw-bold rounded-pill px-3" onclick="shareSantriWa()">
+              <i class="bi bi-whatsapp me-1"></i> Bagikan Rapor Santri
+            </button>
+            <button type="button" class="btn btn-sm btn-primary fw-bold rounded-pill px-3" onclick="window.print()">
+              <i class="bi bi-printer me-1"></i> Cetak Dokumen
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container-custom">
+    <div id="appToast" class="toast align-items-center text-white bg-dark border-0 rounded-3 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body py-2 px-3 small fw-semibold" id="toastMessage">Notifikasi</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // ============================================================
+    // CONFIG GAS BACKEND URL
+    // ============================================================
+    const GAS_BACKEND_URL = "https://script.google.com/macros/s/AKfycbwELxlXYsX7G_o4A25hi_5bd7dsEO3wIdFJXxmIWV4393O7CiRXyA19tDEFTuYrtmQb/exec";
+
+    // State Aplikasi Publik
+    var publicState = {
+      targetKelas: '',
+      targetBulan: '',
+      targetNis: '',
+      allSantri: [],
+      filteredSantri: [],
+      musyrif: null,
+      kadiv: null,
+      selectedSantriDetail: null,
+      sortCol: 1,
+      sortAsc: true
+    };
+
+    function showToast(msg, type) {
+      var toastEl = document.getElementById('appToast');
+      var toastMsg = document.getElementById('toastMessage');
+      if (toastEl && toastMsg) {
+        toastMsg.textContent = msg;
+        toastEl.className = 'toast align-items-center text-white border-0 rounded-3 shadow-lg ' + (type === 'success' ? 'bg-success' : (type === 'warning' ? 'bg-warning text-dark' : 'bg-dark'));
+        var t = new bootstrap.Toast(toastEl, { delay: 3500 });
+        t.show();
+      } else {
+        alert(msg);
+      }
+    }
+
+    function showPillLoading(text) {
+      var pill = document.getElementById('public-loading-pill');
+      var txt = document.getElementById('loading-pill-text');
+      if (txt) txt.textContent = text || 'Memuat Data...';
+      if (pill) pill.classList.add('show');
+    }
+
+    function hidePillLoading() {
+      var pill = document.getElementById('public-loading-pill');
+      if (pill) pill.classList.remove('show');
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Helper JSONP Loader untuk Bypass CORS secara instan di GitHub Pages
+    function jsonpRequest(url, callbackName) {
+      return new Promise(function(resolve, reject) {
+        var callbackFnName = callbackName || ('jsonp_cb_' + Date.now() + '_' + Math.floor(Math.random() * 10000));
+        var timeoutId = setTimeout(function() {
+          cleanup();
+          reject(new Error('Koneksi ke server timeout (waktu habis).'));
+        }, 25000);
+
+        function cleanup() {
+          clearTimeout(timeoutId);
+          if (window[callbackFnName]) delete window[callbackFnName];
+          var scriptEl = document.getElementById(callbackFnName);
+          if (scriptEl && scriptEl.parentNode) scriptEl.parentNode.removeChild(scriptEl);
+        }
+
+        window[callbackFnName] = function(data) {
+          cleanup();
+          resolve(data);
+        };
+
+        var script = document.createElement('script');
+        script.id = callbackFnName;
+        script.src = url + (url.indexOf('?') > -1 ? '&' : '?') + 'callback=' + callbackFnName;
+        script.onerror = function() {
+          cleanup();
+          reject(new Error('Gagal menghubungi server (CORS / Network Error).'));
+        };
+        document.body.appendChild(script);
+      });
+    }
+
+    // Inisialisasi Saat Halaman Dimuat
+    window.addEventListener('DOMContentLoaded', function() {
+      var urlParams = new URLSearchParams(window.location.search);
+      var targetK = urlParams.get('kelas') || urlParams.get('laporan_kelas') || urlParams.get('kelas_laporan') || '';
+      var targetB = urlParams.get('bulan') || urlParams.get('periode') || '';
+      var targetNis = urlParams.get('nis') || urlParams.get('laporan') || urlParams.get('id') || '';
+
+      // Default jika bulan tidak diberikan: ambil bulan berjalan
+      if (!targetB) {
+        var now = new Date();
+        targetB = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+      }
+
+      publicState.targetKelas = targetK;
+      publicState.targetBulan = targetB;
+      publicState.targetNis = targetNis;
+
+      // Update input bulan & label header
+      var selBulan = document.getElementById('input-select-bulan');
+      if (selBulan) selBulan.value = targetB;
+
+      formatBulanHeader(targetB);
+      document.getElementById('label-kelas-hero').textContent = targetK ? targetK : 'Seluruh Kelas';
+      document.getElementById('label-table-kelas').textContent = targetK ? targetK : 'Semua';
+
+      loadClassReportData();
+    });
+
+    function formatBulanHeader(bulanVal) {
+      var bulanNamaList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      var parts = (bulanVal || '').split('-');
+      var str = bulanVal;
+      if (parts.length === 2) {
+        var idx = parseInt(parts[1], 10) - 1;
+        if (bulanNamaList[idx]) str = bulanNamaList[idx] + ' ' + parts[0];
+      }
+      document.getElementById('label-bulan-hero').textContent = str;
+      return str;
+    }
+
+    function onBulanUserChange(val) {
+      if (!val) return;
+      publicState.targetBulan = val;
+      formatBulanHeader(val);
+      loadClassReportData();
+    }
+
+    // Memuat Data Laporan Kelas dari Server GAS via JSONP
+    function loadClassReportData() {
+      document.getElementById('table-loading-state').style.display = 'block';
+      document.getElementById('table-error-state').classList.add('d-none');
+      document.getElementById('table-content-state').style.display = 'none';
+      showPillLoading('Sinkronisasi Laporan ' + (publicState.targetKelas || 'Kelas') + '...');
+
+      var reqUrl = GAS_BACKEND_URL + '?api=laporan_kelas&bulan=' + encodeURIComponent(publicState.targetBulan) + '&kelas=' + encodeURIComponent(publicState.targetKelas);
+
+      jsonpRequest(reqUrl)
+        .then(function(res) {
+          hidePillLoading();
+          document.getElementById('table-loading-state').style.display = 'none';
+
+          if (res && res.success && res.data) {
+            var groups = res.data.groups || [];
+            var foundGroup = null;
+
+            if (publicState.targetKelas && publicState.targetKelas !== 'ALL') {
+              foundGroup = groups.find(function(g) {
+                return g.namaKelas.toLowerCase() === publicState.targetKelas.toLowerCase();
+              });
+            }
+            if (!foundGroup && groups.length > 0) {
+              foundGroup = groups[0];
+              publicState.targetKelas = foundGroup.namaKelas;
+              document.getElementById('label-kelas-hero').textContent = foundGroup.namaKelas;
+              document.getElementById('label-table-kelas').textContent = foundGroup.namaKelas;
+            }
+
+            if (foundGroup) {
+              publicState.allSantri = foundGroup.santriList || [];
+              publicState.musyrif = foundGroup.musyrif || {};
+              publicState.kadiv = res.data.kadivInfo || {};
+              renderMusyrifInfo(publicState.musyrif);
+            } else {
+              publicState.allSantri = [];
+            }
+
+            publicState.filteredSantri = publicState.allSantri.slice();
+
+            // Hitung ringkasan statistik
+            updateClassStats(publicState.allSantri);
+
+            // Render baris tabel
+            renderSantriRows(publicState.filteredSantri);
+            document.getElementById('table-content-state').style.display = 'block';
+
+            // Jika ada parameter NIS pada URL, langsung buka rapor santri tersebut
+            if (publicState.targetNis) {
+              var targetS = publicState.allSantri.find(function(s) {
+                return String(s.nis) === String(publicState.targetNis) || String(s.id) === String(publicState.targetNis);
+              });
+              if (targetS) {
+                openPublicDetailSantri(targetS.id);
+              }
+            }
+          } else {
+            showErrorState(res ? res.message : 'Tidak ada data laporan untuk kelas ini.');
+          }
+        })
+        .catch(function(err) {
+          hidePillLoading();
+          document.getElementById('table-loading-state').style.display = 'none';
+          showErrorState(err.message || 'Koneksi ke server terputus.');
+        });
+    }
+
+    function showErrorState(msg) {
+      document.getElementById('table-error-state').classList.remove('d-none');
+      document.getElementById('error-desc').textContent = msg;
+    }
+
+    function renderMusyrifInfo(musyrif) {
+      var namaEl = document.getElementById('musyrif-nama');
+      var kontakEl = document.getElementById('musyrif-kontak-info');
+      var btnWa = document.getElementById('btn-wa-musyrif-kelas');
+
+      if (!musyrif || !musyrif.nama) {
+        namaEl.textContent = 'Ustadz Pembina Asrama';
+        kontakEl.textContent = 'Kontak Musyrif Terdaftar di Asrama';
+        btnWa.classList.add('d-none');
+        return;
+      }
+
+      namaEl.textContent = musyrif.nama;
+      var waPhone = musyrif.noWa ? String(musyrif.noWa).replace(/\D/g, '') : '';
+      if (waPhone) {
+        if (waPhone.startsWith('0')) waPhone = '62' + waPhone.substring(1);
+        kontakEl.textContent = 'WhatsApp: +' + waPhone;
+        var sKelas = publicState.targetKelas || 'Kelas';
+        var sBulan = formatBulanHeader(publicState.targetBulan);
+        var msgText = encodeURIComponent("Assalamu'alaikum Ustadz " + musyrif.nama + " (Musyrif " + sKelas + "), saya adalah wali santri di kelas " + sKelas + ". Ingin berkonsultasi mengenai laporan perkembangan ananda periode " + sBulan + ".");
+        btnWa.href = "https://wa.me/" + waPhone + "?text=" + msgText;
+        btnWa.classList.remove('d-none');
+      } else {
+        kontakEl.textContent = 'Kontak WhatsApp via Asrama';
+        btnWa.classList.add('d-none');
+      }
+    }
+
+    function updateClassStats(santriList) {
+      var total = santriList.length;
+      var totalMumtaz = 0;
+      var totalUks = 0;
+      var totalTertib = 0;
+
+      santriList.forEach(function(s) {
+        if (s.ibadah && s.ibadah.grade === 'A') totalMumtaz++;
+        if (s.kesehatan && !String(s.kesehatan.status || '').toLowerCase().includes('sehat')) totalUks++;
+        if (s.disiplin && s.disiplin.grade === 'A') totalTertib++;
+      });
+
+      document.getElementById('stat-total-santri').textContent = total + ' Santri';
+      document.getElementById('stat-ibadah-mumtaz').textContent = totalMumtaz + ' Santri (' + (total > 0 ? Math.round((totalMumtaz/total)*100) : 0) + '%)';
+      document.getElementById('stat-catatan-uks').textContent = totalUks + ' Santri';
+      document.getElementById('stat-disiplin-tertib').textContent = totalTertib + ' Santri';
+      document.getElementById('count-santri-filtered').textContent = total;
+    }
+
+    function renderSantriRows(list) {
+      var tbody = document.getElementById('santri-tbody');
+      if (!tbody) return;
+
+      if (!list || list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center py-5 text-muted"><i class="bi bi-inbox fs-2 d-block mb-2 opacity-50"></i>Tidak ada data santri yang sesuai dengan pencarian.</td></tr>';
+        document.getElementById('count-santri-filtered').textContent = '0';
+        return;
+      }
+
+      document.getElementById('count-santri-filtered').textContent = list.length;
+      var html = '';
+
+      list.forEach(function(s, idx) {
+        var sFoto = s.foto || '';
+        var avatarSrc = sFoto ? sFoto : ('https://ui-avatars.com/api/?name=' + encodeURIComponent(s.nama) + '&background=065f46&color=fff&size=64');
+
+        var ibadahGrade = s.ibadah ? s.ibadah.grade : 'B';
+        var ibadahBadgeClass = ibadahGrade === 'A' ? 'bg-success' : (ibadahGrade === 'B' ? 'bg-primary' : (ibadahGrade === 'C' ? 'bg-warning text-dark' : 'bg-danger'));
+        var ibadahPredikat = s.ibadah ? s.ibadah.predikat : 'Baik';
+        var ibadahRingkas = s.ibadah ? s.ibadah.ringkasan : '-';
+
+        var disGrade = s.disiplin ? s.disiplin.grade : 'A';
+        var disBadgeClass = disGrade === 'A' ? 'bg-success-subtle text-success border border-success-subtle' : (disGrade === 'B' ? 'bg-info-subtle text-info border border-info-subtle' : 'bg-danger-subtle text-danger border border-danger-subtle');
+        var disStatus = s.disiplin ? s.disiplin.status : 'Tertib';
+
+        var adabGrade = s.adab ? s.adab.grade : 'A';
+        var adabBadgeClass = adabGrade === 'A' ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-primary-subtle text-primary border border-primary-subtle';
+        var adabStatus = s.adab ? s.adab.status : 'Sopan & Tawadhu';
+
+        var kesStatus = s.kesehatan ? s.kesehatan.status : 'Sehat Prima';
+        var kesBadgeClass = s.kesehatan ? s.kesehatan.badgeClass : 'bg-success';
+        var kesDetail = s.kesehatan ? s.kesehatan.detail : 'Kondisi sehat bugar';
+
+        html += 
+          '<tr>' +
+            '<td class="text-center fw-medium text-muted">' + (idx + 1) + '</td>' +
+            '<td>' +
+              '<div class="d-flex align-items-center gap-2.5">' +
+                '<img src="' + avatarSrc + '" class="rounded-circle border shadow-2xs" style="width: 38px; height: 38px; object-fit: cover;" onerror="this.onerror=null; this.src=\'https://ui-avatars.com/api/?name=' + encodeURIComponent(s.nama) + '&background=065f46&color=fff&size=64\';">' +
+                '<div>' +
+                  '<div class="fw-bold text-dark cursor-pointer text-truncate" style="max-width: 210px;" onclick="openPublicDetailSantri(\'' + s.id + '\')">' +
+                    escapeHtml(s.nama) +
+                  '</div>' +
+                  '<div class="text-muted small" style="font-size: 11px;">' +
+                    'NIS: ' + escapeHtml(s.nis) +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+            '</td>' +
+            '<td>' +
+              '<span class="badge bg-light text-dark border">' +
+                '<i class="bi bi-door-open me-1 text-warning"></i>' + escapeHtml(s.kamar || '-') +
+              '</span>' +
+            '</td>' +
+            '<td>' +
+              '<div class="d-flex align-items-center gap-1.5 mb-1">' +
+                '<span class="badge ' + ibadahBadgeClass + ' fw-bold">' + ibadahGrade + '</span>' +
+                '<span class="fw-semibold text-dark" style="font-size: 12px;">' + escapeHtml(ibadahPredikat) + '</span>' +
+              '</div>' +
+              '<div class="text-muted small text-truncate" style="max-width: 200px; font-size: 11px;" title="' + escapeHtml(ibadahRingkas) + '">' +
+                escapeHtml(ibadahRingkas) +
+              '</div>' +
+            '</td>' +
+            '<td>' +
+              '<span class="badge ' + disBadgeClass + ' fw-semibold py-1 px-2">' +
+                escapeHtml(disStatus) +
+              '</span>' +
+            '</td>' +
+            '<td>' +
+              '<span class="badge ' + adabBadgeClass + ' fw-semibold py-1 px-2">' +
+                escapeHtml(adabStatus) +
+              '</span>' +
+            '</td>' +
+            '<td>' +
+              '<span class="badge ' + kesBadgeClass + ' fw-semibold py-1 px-2" title="' + escapeHtml(kesDetail) + '">' +
+                '<i class="bi bi-heart-pulse me-1"></i>' + escapeHtml(kesStatus) +
+              '</span>' +
+            '</td>' +
+            '<td class="text-center">' +
+              '<button type="button" class="btn btn-xs btn-primary fw-bold rounded-pill px-2.5 py-1 shadow-2xs" onclick="openPublicDetailSantri(\'' + s.id + '\')">' +
+                '<i class="bi bi-eye me-1"></i> Rapor' +
+              '</button>' +
+            '</td>' +
+          '</tr>';
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    // Pencarian Santri Real-Time
+    function filterSantriTable(keyword) {
+      var kw = (keyword || '').toLowerCase().trim();
+      if (!kw) {
+        publicState.filteredSantri = publicState.allSantri.slice();
+      } else {
+        publicState.filteredSantri = publicState.allSantri.filter(function(s) {
+          return (s.nama && s.nama.toLowerCase().includes(kw)) ||
+                 (s.nis && String(s.nis).toLowerCase().includes(kw)) ||
+                 (s.kamar && String(s.kamar).toLowerCase().includes(kw));
+        });
+      }
+      renderSantriRows(publicState.filteredSantri);
+    }
+
+    // Pengurutan Tabel Interaktif
+    function sortTable(colIdx) {
+      if (publicState.sortCol === colIdx) {
+        publicState.sortAsc = !publicState.sortAsc;
+      } else {
+        publicState.sortCol = colIdx;
+        publicState.sortAsc = true;
+      }
+
+      publicState.filteredSantri.sort(function(a, b) {
+        var valA = '', valB = '';
+        if (colIdx === 1) { valA = a.nama; valB = b.nama; }
+        else if (colIdx === 2) { valA = a.kamar; valB = b.kamar; }
+        else if (colIdx === 3) { valA = (a.ibadah ? a.ibadah.grade : 'Z'); valB = (b.ibadah ? b.ibadah.grade : 'Z'); }
+        else if (colIdx === 4) { valA = (a.disiplin ? a.disiplin.status : ''); valB = (b.disiplin ? b.disiplin.status : ''); }
+        else if (colIdx === 5) { valA = (a.adab ? a.adab.status : ''); valB = (b.adab ? b.adab.status : ''); }
+        else if (colIdx === 6) { valA = (a.kesehatan ? a.kesehatan.status : ''); valB = (b.kesehatan ? b.kesehatan.status : ''); }
+
+        valA = String(valA || '').toLowerCase();
+        valB = String(valB || '').toLowerCase();
+
+        if (valA < valB) return publicState.sortAsc ? -1 : 1;
+        if (valA > valB) return publicState.sortAsc ? 1 : -1;
+        return 0;
+      });
+
+      renderSantriRows(publicState.filteredSantri);
+    }
+
+    // Membuka Modal Rapor Santri Komprehensif via JSONP
+    function openPublicDetailSantri(santriId) {
+      var santri = publicState.allSantri.find(function(s) { return String(s.id) === String(santriId); });
+      var santriNama = santri ? santri.nama : 'Santri';
+
+      showPillLoading('Memuat Rincian ' + santriNama + '...');
+
+      var reqUrl = GAS_BACKEND_URL + '?api=detail_santri&id=' + encodeURIComponent(santriId) + '&bulan=' + encodeURIComponent(publicState.targetBulan);
+
+      jsonpRequest(reqUrl)
+        .then(function(res) {
+          hidePillLoading();
+          if (res && res.success && res.data) {
+            publicState.selectedSantriDetail = res.data;
+            populatePublicModalDetail(res.data);
+            var myModal = new bootstrap.Modal(document.getElementById('modalPublicDetailSantri'));
+            myModal.show();
+          } else {
+            showToast('Gagal memuat rincian: ' + (res ? res.message : 'Data tidak ditemukan'), 'warning');
+          }
+        })
+        .catch(function(err) {
+          hidePillLoading();
+          showToast('Terjadi kesalahan: ' + err.message, 'warning');
+        });
+    }
+
+    function populatePublicModalDetail(data) {
+      var p = data.profile || {};
+      var ov = data.overall || {};
+      var pilars = data.pilars || {};
+
+      // Profil
+      document.getElementById('modal-santri-nama').textContent = p.nama || '-';
+      document.getElementById('modal-santri-nis').textContent = p.nis || '-';
+      document.getElementById('modal-santri-kelas').textContent = p.kelas || '-';
+      document.getElementById('modal-santri-kamar').textContent = p.kamar || '-';
+      document.getElementById('modal-santri-wali').textContent = p.namaWali || 'Orang Tua / Wali';
+      document.getElementById('modal-santri-kota').textContent = p.kotaAsal || '-';
+      document.getElementById('modal-santri-musyrif').textContent = p.musyrifNama || '-';
+      document.getElementById('modal-santri-periode').textContent = p.bulanStr || p.bulan || '-';
+
+      var fotoEl = document.getElementById('modal-santri-foto');
+      fotoEl.src = p.foto ? p.foto : ('https://ui-avatars.com/api/?name=' + encodeURIComponent(p.nama) + '&background=065f46&color=fff&size=128');
+
+      // Capaian Ibadah
+      document.getElementById('modal-santri-percent').textContent = (ov.percent || 100) + '%';
+      document.getElementById('modal-santri-predikat').textContent = ov.predikat || 'MUMTAZ (SANGAT BAIK)';
+      var grade = ov.grade || 'A';
+      var gradeBadge = document.getElementById('modal-badge-grade');
+      gradeBadge.textContent = grade;
+      gradeBadge.className = 'position-absolute bottom-0 end-0 badge rounded-pill border border-white fw-bold shadow-2xs ' +
+        (grade === 'A' ? 'bg-success' : (grade === 'B' ? 'bg-primary' : (grade === 'C' ? 'bg-warning text-dark' : 'bg-danger')));
+
+      // Musyrif WhatsApp link
+      var waLink = document.getElementById('modal-musyrif-wa-link');
+      var waText = document.getElementById('modal-musyrif-wa-text');
+      if (p.musyrifWa) {
+        var cleanWa = String(p.musyrifWa).replace(/\D/g, '');
+        if (cleanWa.startsWith('0')) cleanWa = '62' + cleanWa.substring(1);
+        waText.textContent = 'WA: ' + p.musyrifWa;
+        waLink.href = 'https://wa.me/' + cleanWa + '?text=' + encodeURIComponent("Assalamu'alaikum Ustadz " + p.musyrifNama + ", saya orang tua dari " + p.nama + " (" + p.nis + " - " + p.kelas + "). Ingin berkonsultasi mengenai rapor ananda.");
+        waLink.classList.remove('d-none');
+      } else {
+        waLink.classList.add('d-none');
+      }
+
+      // 4 Pilar
+      var wP = pilars.wajib || {};
+      document.getElementById('modal-pilar-wajib-baik').textContent = wP.baik || '-';
+      document.getElementById('modal-pilar-wajib-kuat').textContent = wP.perluDikuatkan || 'Pertahankan istiqomah';
+
+      var sP = pilars.sunnah || {};
+      document.getElementById('modal-pilar-sunnah-baik').textContent = sP.baik || '-';
+      document.getElementById('modal-pilar-sunnah-kuat').textContent = sP.perluDikuatkan || 'Tingkatkan amalan sunnah';
+
+      var dP = pilars.disiplin || {};
+      document.getElementById('modal-pilar-disiplin-baik').textContent = dP.baik || '-';
+      document.getElementById('modal-pilar-disiplin-kuat').textContent = dP.perluDikuatkan || 'Tertib dan tepat waktu';
+
+      var aP = pilars.adab || {};
+      document.getElementById('modal-pilar-adab-baik').textContent = aP.baik || '-';
+      document.getElementById('modal-pilar-adab-kuat').textContent = aP.perluDikuatkan || 'Sopan santun dan tawadhu';
+
+      // 1. Rincian Amal Yaumi
+      var ay = data.amalYaumi || {};
+      document.getElementById('modal-amalyaumi-periode').textContent = ay.periode || p.bulanStr || '-';
+      var rList = ay.rincianIbadah || [];
+      var ayContainer = document.getElementById('modal-amalyaumi-list');
+      if (rList.length === 0) {
+        ayContainer.innerHTML = '<div class="alert alert-light border small text-muted text-center py-3">Catatan amal yaumi bulan ini tercatat sangat baik dan tertib di masjid asrama.</div>';
+      } else {
+        var ayHtml = '<div class="row g-2">';
+        rList.forEach(function(item) {
+          ayHtml += 
+            '<div class="col-12 col-md-6">' +
+              '<div class="p-2.5 rounded-3 bg-light border d-flex justify-content-between align-items-center">' +
+                '<span class="fw-semibold text-dark">' + escapeHtml(item.nama) + '</span>' +
+                '<span class="badge bg-success-subtle text-success border border-success-subtle">' + escapeHtml(item.capaian || 'Terlaksana') + '</span>' +
+              '</div>' +
+            '</div>';
+        });
+        ayHtml += '</div>';
+        ayContainer.innerHTML = ayHtml;
+      }
+
+      // 2. Catatan Medis UKS
+      var kes = data.kesehatan || {};
+      var uksRiwayat = kes.riwayat || [];
+      var uksContainer = document.getElementById('modal-uks-list');
+      if (uksRiwayat.length === 0) {
+        uksContainer.innerHTML = '<div class="alert alert-success-subtle border border-success-subtle text-success p-3 text-center mb-0"><i class="bi bi-shield-check me-1 fs-5"></i>Alhamdulillah, ananda dalam keadaan sehat wal afiat dan tidak memiliki catatan sakit di UKS pada bulan ini.</div>';
+      } else {
+        var uksHtml = '<div class="list-group list-group-flush border rounded-3">';
+        uksRiwayat.forEach(function(u) {
+          uksHtml += 
+            '<div class="list-group-item p-3">' +
+              '<div class="d-flex justify-content-between align-items-center mb-1">' +
+                '<span class="fw-bold text-dark"><i class="bi bi-calendar-event text-danger me-1"></i>' + escapeHtml(u.tanggal || '-') + '</span>' +
+                '<span class="badge bg-warning text-dark">' + escapeHtml(u.status || 'Berobat') + '</span>' +
+              '</div>' +
+              '<div class="text-muted small">Keluhan: <strong>' + escapeHtml(u.keluhan || '-') + '</strong></div>' +
+              '<div class="text-muted small">Tindakan/Obat: ' + escapeHtml(u.tindakan || u.obat || 'Diberikan obat dan istirahat') + '</div>' +
+            '</div>';
+        });
+        uksHtml += '</div>';
+        uksContainer.innerHTML = uksHtml;
+      }
+
+      // 3. Catatan Disiplin & Reward
+      var pel = data.pelanggaran || {};
+      var rew = data.reward || {};
+      var disContainer = document.getElementById('modal-disiplin-list');
+      var pList = pel.riwayat || [];
+      var rListReward = rew.riwayat || [];
+
+      var disHtml = '';
+      if (pList.length === 0 && rListReward.length === 0) {
+        disHtml = '<div class="alert alert-success-subtle border border-success-subtle text-success p-3 text-center mb-0"><i class="bi bi-award-fill me-1 fs-5"></i>Masya Allah, ananda sangat tertib dan disiplin. Tidak ada catatan pelanggaran disiplin pada bulan ini.</div>';
+      } else {
+        if (pList.length > 0) {
+          disHtml += '<h6 class="fw-bold text-danger small mb-2"><i class="bi bi-exclamation-circle me-1"></i>Catatan Kedisiplinan:</h6><div class="list-group list-group-flush border rounded-3 mb-3">';
+          pList.forEach(function(pl) {
+            disHtml += 
+              '<div class="list-group-item p-2.5">' +
+                '<div class="d-flex justify-content-between align-items-center mb-1">' +
+                  '<span class="fw-semibold text-dark">' + escapeHtml(pl.tanggal || '-') + '</span>' +
+                  '<span class="badge bg-danger">Poin Minus: ' + (pl.poin || '-') + '</span>' +
+                '</div>' +
+                '<div class="small text-muted">' + escapeHtml(pl.keterangan || pl.pelanggaran || '-') + '</div>' +
+              '</div>';
+          });
+          disHtml += '</div>';
+        }
+        if (rListReward.length > 0) {
+          disHtml += '<h6 class="fw-bold text-success small mb-2"><i class="bi bi-star-fill text-warning me-1"></i>Apresiasi &amp; Prestasi Santri:</h6><div class="list-group list-group-flush border rounded-3">';
+          rListReward.forEach(function(rw) {
+            disHtml += 
+              '<div class="list-group-item p-2.5">' +
+                '<div class="d-flex justify-content-between align-items-center mb-1">' +
+                  '<span class="fw-semibold text-dark">' + escapeHtml(rw.tanggal || '-') + '</span>' +
+                  '<span class="badge bg-success">Reward: +' + (rw.poin || '10') + '</span>' +
+                '</div>' +
+                '<div class="small text-muted">' + escapeHtml(rw.keterangan || rw.prestasi || '-') + '</div>' +
+              '</div>';
+          });
+          disHtml += '</div>';
+        }
+      }
+      disContainer.innerHTML = disHtml;
+
+      // 4. Izin & Telepon
+      var per = data.perizinan || {};
+      var tel = data.telepon || {};
+      var izContainer = document.getElementById('modal-izin-list');
+      var izList = per.riwayat || [];
+      var telList = tel.riwayat || [];
+
+      var izHtml = '<div class="row g-3">';
+      izHtml += '<div class="col-12 col-md-6">';
+      izHtml += '<h6 class="fw-bold text-primary small mb-2"><i class="bi bi-door-open me-1"></i>Riwayat Perizinan:</h6>';
+      if (izList.length === 0) {
+        izHtml += '<div class="p-3 bg-light rounded-3 text-muted small text-center">Tidak ada riwayat perizinan bulan ini.</div>';
+      } else {
+        izHtml += '<div class="list-group list-group-flush border rounded-3">';
+        izList.forEach(function(iz) {
+          izHtml += 
+            '<div class="list-group-item p-2">' +
+              '<div class="d-flex justify-content-between">' +
+                '<span class="fw-bold">' + escapeHtml(iz.jenis || 'Izin') + '</span>' +
+                '<span class="badge bg-secondary">' + escapeHtml(iz.status || '-') + '</span>' +
+              '</div>' +
+              '<div class="small text-muted">' + escapeHtml(iz.tanggal || '-') + ' (' + escapeHtml(iz.keperluan || '-') + ')</div>' +
+            '</div>';
+        });
+        izHtml += '</div>';
+      }
+      izHtml += '</div>';
+
+      izHtml += '<div class="col-12 col-md-6">';
+      izHtml += '<h6 class="fw-bold text-info small mb-2"><i class="bi bi-telephone me-1"></i>Riwayat Telepon Wartel:</h6>';
+      if (telList.length === 0) {
+        izHtml += '<div class="p-3 bg-light rounded-3 text-muted small text-center">Tidak ada catatan penelponan bulan ini.</div>';
+      } else {
+        izHtml += '<div class="list-group list-group-flush border rounded-3">';
+        telList.forEach(function(tl) {
+          izHtml += 
+            '<div class="list-group-item p-2">' +
+              '<div class="d-flex justify-content-between">' +
+                '<span class="fw-bold">' + escapeHtml(tl.tanggal || '-') + '</span>' +
+                '<span class="badge bg-info text-dark">' + escapeHtml(tl.durasi || '-') + '</span>' +
+              '</div>' +
+              '<div class="small text-muted">Tujuan: ' + escapeHtml(tl.tujuan || 'Wali') + '</div>' +
+            '</div>';
+        });
+        izHtml += '</div>';
+      }
+      izHtml += '</div></div>';
+      izContainer.innerHTML = izHtml;
+
+      // 5. Riwayat Catatan Buku Penghubung
+      var catWali = data.catatanBukuPenghubung || [];
+      var catContainer = document.getElementById('modal-catatan-wali-list');
+      if (catWali.length === 0) {
+        catContainer.innerHTML = '<p class="text-muted fst-italic mb-0">Belum ada catatan atau tanggapan dari wali santri sebelumnya.</p>';
+      } else {
+        var cHtml = '<div class="list-group list-group-flush border rounded-3">';
+        catWali.forEach(function(cw) {
+          cHtml += 
+            '<div class="list-group-item p-3">' +
+              '<div class="d-flex justify-content-between align-items-center mb-1">' +
+                '<span class="fw-bold text-dark"><i class="bi bi-person-fill text-success me-1"></i>' + escapeHtml(cw.pengirim || 'Wali Santri') + ' <span class="badge bg-light text-muted border">' + escapeHtml(cw.hubungan || 'Orang Tua') + '</span></span>' +
+                '<span class="small text-muted">' + escapeHtml(cw.tanggal || '-') + '</span>' +
+              '</div>' +
+              '<p class="mb-0 text-dark small bg-light p-2 rounded-2 mt-1">"' + escapeHtml(cw.isi || cw.catatan || '-') + '"</p>' +
+            '</div>';
+        });
+        cHtml += '</div>';
+        catContainer.innerHTML = cHtml;
+      }
+
+      // Default buka tab Amal Yaumi
+      switchPublicTab('amalyaumi');
+    }
+
+    // Tab Switching Manual di Modal (Sesuai AGENTS.md Rule 7)
+    function switchPublicTab(tabKey) {
+      var tabs = ['amalyaumi', 'uks', 'disiplin', 'izin', 'penghubung'];
+      tabs.forEach(function(k) {
+        var btn = document.getElementById('tab-btn-' + k);
+        var pane = document.getElementById('pane-' + k);
+        if (btn && pane) {
+          if (k === tabKey) {
+            btn.classList.add('active');
+            pane.classList.add('show', 'active');
+          } else {
+            btn.classList.remove('active');
+            pane.classList.remove('show', 'active');
+          }
+        }
+      });
+    }
+
+    // Submit Tanggapan Wali Santri ke Database
+    function submitTanggapanWali() {
+      var detail = publicState.selectedSantriDetail;
+      if (!detail || !detail.profile) {
+        showToast('Data santri tidak teridentifikasi.', 'warning');
+        return;
+      }
+
+      var inpNama = document.getElementById('input-pengirim-nama');
+      var selHub = document.getElementById('input-pengirim-hubungan');
+      var inpPesan = document.getElementById('input-pengirim-pesan');
+      var btnSubmit = document.getElementById('btn-submit-tanggapan');
+
+      var nama = inpNama ? inpNama.value.trim() : '';
+      var hubungan = selHub ? selHub.value : 'Orang Tua';
+      var isi = inpPesan ? inpPesan.value.trim() : '';
+
+      if (!nama || !isi) {
+        showToast('Silakan lengkapi nama dan pesan tanggapan Anda.', 'warning');
+        return;
+      }
+
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Mengirim...';
+      showPillLoading('Menyimpan catatan buku penghubung...');
+
+      var payload = {
+        santriId: detail.profile.id || detail.profile.nis,
+        nis: detail.profile.nis,
+        santriNama: detail.profile.nama,
+        kelas: detail.profile.kelas,
+        namaPengirim: nama,
+        hubungan: hubungan,
+        isi: isi
+      };
+
+      var reqUrl = GAS_BACKEND_URL + '?api=simpan_tanggapan_wali&data=' + encodeURIComponent(JSON.stringify(payload));
+
+      jsonpRequest(reqUrl)
+        .then(function(res) {
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = '<i class="bi bi-send-fill me-1"></i> Kirim Catatan Wali';
+          hidePillLoading();
+
+          if (res && res.success) {
+            showToast('Alhamdulillah! Catatan Anda berhasil disimpan.', 'success');
+            inpPesan.value = '';
+
+            // Tanyakan apakah ingin meneruskan via WhatsApp ke Musyrif
+            var musyrifWa = detail.profile.musyrifWa || (publicState.musyrif ? publicState.musyrif.noWa : '');
+            if (musyrifWa && res.data && res.data.waText) {
+              if (confirm('Catatan berhasil tersimpan di sistem!\n\nApakah Ayah/Bunda ingin meneruskan pesan ini langsung ke WhatsApp Ustadz Musyrif Pendamping?')) {
+                var cleanWa = String(musyrifWa).replace(/\D/g, '');
+                if (cleanWa.startsWith('0')) cleanWa = '62' + cleanWa.substring(1);
+                window.open('https://wa.me/' + cleanWa + '?text=' + encodeURIComponent(res.data.waText), '_blank');
+              }
+            }
+
+            // Muat ulang detail santri untuk memperbarui riwayat catatan
+            openPublicDetailSantri(detail.profile.id);
+          } else {
+            showToast('Gagal mengirim catatan: ' + (res ? res.message : 'Kesalahan sistem'), 'warning');
+          }
+        })
+        .catch(function(err) {
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = '<i class="bi bi-send-fill me-1"></i> Kirim Catatan Wali';
+          hidePillLoading();
+          showToast('Koneksi terputus: ' + err.message, 'warning');
+        });
+    }
+
+    // Salin Tautan Kelas Ini
+    function copyCurrentClassLink() {
+      var url = window.location.href;
+      var copied = false;
+      try {
+        var textArea = document.createElement("textarea");
+        textArea.value = url;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        textArea.style.top = "-9999px";
+        textArea.style.opacity = "0";
+        textArea.setAttribute("readonly", "");
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        textArea.setSelectionRange(0, 99999);
+        copied = document.execCommand('copy');
+        document.body.removeChild(textArea);
+      } catch (e) {
+        copied = false;
+      }
+
+      if (copied) {
+        showToast('Tautan Laporan Kelas berhasil disalin!', 'success');
+        return;
+      }
+
+      try {
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          navigator.clipboard.writeText(url).then(function() {
+            showToast('Tautan Laporan Kelas berhasil disalin!', 'success');
+          }).catch(function() {
+            prompt('Salin tautan laporan kelas ini:', url);
+          });
+          return;
+        }
+      } catch(e2) {}
+
+      prompt('Salin tautan laporan kelas ini:', url);
+    }
+
+    // Bagikan Rapor Individual Santri via WhatsApp
+    function shareSantriWa() {
+      var detail = publicState.selectedSantriDetail;
+      if (!detail || !detail.profile) return;
+      var p = detail.profile;
+      var ov = detail.overall || {};
+
+      var link = window.location.href.split('?')[0].split('#')[0] + '?nis=' + encodeURIComponent(p.nis) + '&bulan=' + encodeURIComponent(p.bulan || '');
+      var msg = "Assalamu'alaikum Warahmatullahi Wabarakatuh\n\n" +
+        "Berikut disampaikan *Rapor Perkembangan Santri* dari Pondok Pesantren Imam Syafi'i Brebes:\n\n" +
+        "👤 *Nama:* " + p.nama + "\n" +
+        "🏷️ *NIS:* " + p.nis + " | *Kelas:* " + p.kelas + "\n" +
+        "📅 *Periode:* " + (p.bulanStr || p.bulan || '-') + "\n" +
+        "⭐ *Predikat Ibadah:* " + (ov.percent || 100) + "% - *" + (ov.predikat || 'MUMTAZ') + "*\n\n" +
+        "🔗 *Tautan Lengkap Rapor & Buku Penghubung:*\n" + link + "\n\n" +
+        "_Pengasuhan Kesantrian - Ponpes Imam Syafi'i Brebes_";
+
+      window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+    }
+  </script>
+</body>
+</html>
