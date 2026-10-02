@@ -1432,6 +1432,25 @@
         });
     }
 
+    function formatNamaPeriodeBulan(val) {
+      if (!val || val === '-' || val === 'REALTIME') return 'Real-Time (Terbaru)';
+      var str = String(val).trim();
+      var bulanNamaList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      for (var i = 0; i < bulanNamaList.length; i++) {
+        if (str.toLowerCase().indexOf(bulanNamaList[i].toLowerCase()) !== -1) {
+          return str;
+        }
+      }
+      var parts = str.split('-');
+      if (parts.length >= 2 && parts[0].length === 4) {
+        var bIdx = parseInt(parts[1], 10) - 1;
+        if (bIdx >= 0 && bIdx < 12) {
+          return bulanNamaList[bIdx] + ' ' + parts[0];
+        }
+      }
+      return str;
+    }
+
     function populatePublicModalDetail(data) {
       var p = data.profile || {};
       var ov = data.overallSummary || data.overall || {};
@@ -1445,7 +1464,8 @@
       document.getElementById('modal-santri-wali').textContent = p.namaWali || 'Orang Tua / Wali';
       document.getElementById('modal-santri-kota').textContent = p.kotaAsal || '-';
       document.getElementById('modal-santri-musyrif').textContent = (data.musyrif && data.musyrif.nama) ? data.musyrif.nama : (p.musyrifNama || '-');
-      document.getElementById('modal-santri-periode').textContent = publicState.isRealtime ? 'Real-Time (Terbaru)' : (p.bulanStr || p.bulan || '-');
+      var displayBulan = publicState.isRealtime ? 'Real-Time (Terbaru)' : formatNamaPeriodeBulan(p.bulanStr || p.bulanNama || p.bulan);
+      document.getElementById('modal-santri-periode').textContent = publicState.isRealtime ? 'Real-Time (Terbaru)' : ('Periode ' + displayBulan);
 
       var fotoEl = document.getElementById('modal-santri-foto');
       fotoEl.src = p.foto ? p.foto : ('https://ui-avatars.com/api/?name=' + encodeURIComponent(p.nama) + '&background=065f46&color=fff&size=128');
@@ -1493,7 +1513,7 @@
 
       // 1. Rincian Amal Yaumi
       var ay = data.amalYaumi || {};
-      document.getElementById('modal-amalyaumi-periode').textContent = ay.periode || p.bulanStr || (publicState.isRealtime ? 'Terbaru' : '-');
+      document.getElementById('modal-amalyaumi-periode').textContent = ay.periode ? formatNamaPeriodeBulan(ay.periode) : displayBulan;
       var rList = ay.rincianIbadah || data.amalanResults || [];
       var ayContainer = document.getElementById('modal-amalyaumi-list');
       if (rList.length === 0) {
