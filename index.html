@@ -509,6 +509,12 @@
                 <button type="button" class="btn btn-sm btn-outline-light rounded-circle p-1 shadow-2xs ms-1" id="btn-modal-fullscreen" onclick="toggleDetailFullscreen()" title="Layar Penuh (Full Screen)" style="width: 32px; height: 32px;">
                   <i class="bi bi-arrows-fullscreen"></i>
                 </button>
+                <button type="button" class="btn btn-sm btn-light text-dark fw-bold rounded-pill px-2.5 py-1 shadow-2xs ms-1 d-flex align-items-center gap-1" onclick="simpanLaporanSebagaiPdf()" title="Simpan / Cetak Laporan PDF">
+                  <i class="bi bi-file-earmark-pdf-fill text-danger"></i> <span class="d-none d-md-inline" style="font-size: 11.5px;">Unduh PDF</span>
+                </button>
+                <button type="button" class="btn btn-sm btn-light text-dark fw-bold rounded-pill px-2.5 py-1 shadow-2xs ms-1 d-flex align-items-center gap-1" onclick="simpanLaporanSebagaiGambar()" title="Simpan sebagai Gambar HD (PNG)">
+                  <i class="bi bi-image-fill text-success"></i> <span class="d-none d-md-inline" style="font-size: 11.5px;">Simpan Gambar</span>
+                </button>
                 <span class="badge bg-warning text-dark px-3 py-1.5 rounded-pill fw-bold shadow-2xs d-none d-sm-inline-block ms-1">
                   <i class="bi bi-patch-check-fill me-1"></i>Dokumen Resmi Pengasuhan
                 </span>
@@ -661,10 +667,14 @@
                   <button class="nav-link btn-sm rounded-pill fw-bold text-nowrap" id="tab-btn-disiplin" onclick="switchPublicTab('disiplin')">
                     <i class="bi bi-shield-check me-1"></i> Kedisiplinan &amp; Reward
                   </button>
-                </li>
                 <li class="nav-item">
                   <button class="nav-link btn-sm rounded-pill fw-bold text-nowrap" id="tab-btn-izin" onclick="switchPublicTab('izin')">
                     <i class="bi bi-door-open me-1"></i> Izin &amp; Telepon
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link btn-sm rounded-pill fw-bold text-nowrap" id="tab-btn-kesimpulan" onclick="switchPublicTab('kesimpulan')">
+                    <i class="bi bi-award-fill text-warning me-1"></i> Kesimpulan &amp; Rekomendasi
                   </button>
                 </li>
                 <li class="nav-item">
@@ -765,7 +775,35 @@
               </div>
             </div>
 
-            <!-- 5. TAB BUKU PENGHUBUNG WALI -->
+            <!-- 5. TAB KESIMPULAN & REKOMENDASI PENGASUHAN -->
+            <div class="tab-pane fade" id="pane-kesimpulan">
+              <div class="card border-0 shadow-2xs rounded-3 bg-white p-3 p-md-4">
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="rounded-circle bg-warning bg-opacity-15 p-2 text-warning d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                      <i class="bi bi-award-fill fs-5"></i>
+                    </span>
+                    <div>
+                      <h6 class="fw-bold mb-0 text-dark">Rangkuman &amp; Kesimpulan Pengasuhan Santri</h6>
+                      <div class="text-muted small" style="font-size: 11px;">Sintesis Menyeluruh 4 Pilar Pembinaan, Ibadah, Disiplin (Poin Bersih), &amp; Kesehatan</div>
+                    </div>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-xs btn-outline-success rounded-pill px-3 py-1 shadow-2xs fw-bold" onclick="salinKesimpulanSantriPublic()">
+                      <i class="bi bi-clipboard-check me-1"></i>Salin Teks
+                    </button>
+                    <button type="button" class="btn btn-xs btn-success rounded-pill px-3 py-1 shadow-2xs fw-bold" onclick="kirimKesimpulanWaPublic()">
+                      <i class="bi bi-whatsapp me-1"></i>Kirim WA
+                    </button>
+                  </div>
+                </div>
+                <div id="public-modal-kesimpulan-box">
+                  <!-- Populated dynamically by generateNarasiKesimpulanLaporan -->
+                </div>
+              </div>
+            </div>
+
+            <!-- 6. TAB BUKU PENGHUBUNG WALI -->
             <div class="tab-pane fade" id="pane-penghubung">
               <div class="card border-0 shadow-2xs rounded-3 bg-white p-3">
                 <h6 class="fw-bold mb-2 text-dark"><i class="bi bi-chat-heart-fill text-success me-1"></i>Formulir Buku Penghubung Wali Santri</h6>
@@ -820,12 +858,15 @@
           <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">
             Tutup
           </button>
-          <div class="d-flex gap-2">
+          <div class="d-flex gap-2 flex-wrap">
+            <button type="button" class="btn btn-sm btn-light border text-dark fw-bold rounded-pill px-3" onclick="simpanLaporanSebagaiPdf()" title="Unduh Rapor PDF">
+              <i class="bi bi-file-earmark-pdf-fill text-danger me-1"></i> Unduh PDF
+            </button>
+            <button type="button" class="btn btn-sm btn-light border text-dark fw-bold rounded-pill px-3" onclick="simpanLaporanSebagaiGambar()" title="Simpan sebagai Gambar HD">
+              <i class="bi bi-image-fill text-success me-1"></i> Simpan Gambar
+            </button>
             <button type="button" class="btn btn-sm btn-outline-success fw-bold rounded-pill px-3" onclick="shareSantriWa()">
               <i class="bi bi-whatsapp me-1"></i> Bagikan Rapor Santri
-            </button>
-            <button type="button" class="btn btn-sm btn-primary fw-bold rounded-pill px-3" onclick="window.print()">
-              <i class="bi bi-printer me-1"></i> Cetak Dokumen
             </button>
           </div>
         </div>
@@ -847,6 +888,9 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Library Unduh PDF & Simpan Gambar HD -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <script>
     // ============================================================
@@ -1661,7 +1705,7 @@
         uksContainer.innerHTML = uksHtml;
       }
 
-      // 3. Catatan Disiplin & Reward (Dengan Widget Ringkasan Skor Poin Minus, Reward & Nilai Akhir)
+      // 3. Catatan Disiplin & Reward (Dengan Poin Pelanggaran Bersih)
       var pel = data.pelanggaran || {};
       var rew = data.reward || {};
       var dis = data.kedisiplinan || {};
@@ -1671,32 +1715,40 @@
 
       var poinMinus = typeof dis.totalPoinMinus !== 'undefined' ? dis.totalPoinMinus : (pel.totalPoinMinus || 0);
       var poinReward = typeof dis.totalPoinReward !== 'undefined' ? dis.totalPoinReward : (rew.totalPoinReward || 0);
+      var poinBersih = Math.max(0, poinMinus - poinReward);
       var nilaiAkhir = typeof dis.nilaiAkhir !== 'undefined' ? dis.nilaiAkhir : Math.max(0, Math.min(100, 100 - poinMinus + poinReward));
       var predDisiplin = dis.predikat || (nilaiAkhir >= 95 ? 'Sangat Tertib (A)' : (nilaiAkhir >= 80 ? 'Tertib (B)' : (nilaiAkhir >= 65 ? 'Perlu Perhatian (C)' : 'Bimbingan Khusus (D)')));
       var badgeClassDis = nilaiAkhir >= 95 ? 'bg-success' : (nilaiAkhir >= 80 ? 'bg-primary' : (nilaiAkhir >= 65 ? 'bg-warning text-dark' : 'bg-danger'));
 
       var disHtml = '';
 
-      // WIDGET 3 KARTU STATISTIK KEDISIPLINAN
+      // WIDGET 4 KARTU STATISTIK KEDISIPLINAN TERMASUK POIN BERSIH
       disHtml += 
         '<div class="row g-2 mb-3">' +
-          '<div class="col-4">' +
+          '<div class="col-6 col-md-3">' +
             '<div class="p-2.5 rounded-3 bg-danger-subtle border border-danger-subtle text-center h-100 shadow-2xs">' +
-              '<div class="text-danger small fw-semibold" style="font-size: 11px;"><i class="bi bi-shield-x me-1"></i>Poin Minus</div>' +
+              '<div class="text-danger small fw-semibold" style="font-size: 11px;"><i class="bi bi-shield-x me-1"></i>Poin Pelanggaran</div>' +
               '<div class="fw-bold text-danger fs-5 my-0.5">-' + poinMinus + ' Poin</div>' +
               '<div class="text-muted" style="font-size: 10px;">' + pList.length + ' Catatan Pelanggaran</div>' +
             '</div>' +
           '</div>' +
-          '<div class="col-4">' +
+          '<div class="col-6 col-md-3">' +
             '<div class="p-2.5 rounded-3 bg-success-subtle border border-success-subtle text-center h-100 shadow-2xs">' +
               '<div class="text-success small fw-semibold" style="font-size: 11px;"><i class="bi bi-star-fill me-1 text-warning"></i>Poin Reward</div>' +
               '<div class="fw-bold text-success fs-5 my-0.5">+' + poinReward + ' Poin</div>' +
               '<div class="text-muted" style="font-size: 10px;">' + rListReward.length + ' Prestasi / Apresiasi</div>' +
             '</div>' +
           '</div>' +
-          '<div class="col-4">' +
+          '<div class="col-6 col-md-3">' +
+            '<div class="p-2.5 rounded-3 border text-center h-100 shadow-2xs" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border-color: #fde68a !important;">' +
+              '<div class="text-dark small fw-semibold" style="font-size: 11px;"><i class="bi bi-calculator me-1 text-warning"></i>Poin Bersih (Sisa)</div>' +
+              '<div class="fw-bold text-dark fs-5 my-0.5">' + poinBersih + ' Poin</div>' +
+              '<div class="text-muted" style="font-size: 10px;">' + (poinBersih === 0 ? 'Bersih / Sangat Aman' : (poinBersih <= 20 ? 'Terkendali' : 'Perlu Perhatian')) + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="col-6 col-md-3">' +
             '<div class="p-2.5 rounded-3 bg-primary-subtle border border-primary-subtle text-center h-100 shadow-2xs">' +
-              '<div class="text-primary small fw-semibold" style="font-size: 11px;"><i class="bi bi-trophy-fill me-1 text-primary"></i>Nilai Akhir Disiplin</div>' +
+              '<div class="text-primary small fw-semibold" style="font-size: 11px;"><i class="bi bi-trophy-fill me-1 text-primary"></i>Nilai Akhir</div>' +
               '<div class="fw-bold text-primary fs-5 my-0.5">' + nilaiAkhir + ' / 100</div>' +
               '<div class="badge ' + badgeClassDis + ' px-2 py-0.5 rounded-pill" style="font-size: 10px;">' + escapeHtml(predDisiplin) + '</div>' +
             '</div>' +
@@ -1721,7 +1773,7 @@
               '<div class="list-group-item p-2.5">' +
                 '<div class="d-flex justify-content-between align-items-center mb-1">' +
                   '<span class="fw-semibold text-dark"><i class="bi bi-calendar-event me-1 text-danger"></i>' + escapeHtml(pl.tanggal || '-') + '</span>' +
-                  '<span class="badge bg-danger">Poin Minus: ' + (pl.poin || '0') + '</span>' +
+                  '<span class="badge bg-danger">Poin Minus: -' + (pl.poin || '0') + '</span>' +
                 '</div>' +
                 '<div class="fw-bold text-dark" style="font-size: 13px;">' + escapeHtml(judulPel) + '</div>' +
                 (subPel ? '<div class="small text-muted mt-0.5">' + escapeHtml(subPel) + '</div>' : '') +
@@ -1749,7 +1801,7 @@
       }
       disContainer.innerHTML = disHtml;
 
-      // 4. Izin & Telepon
+      // 4. Izin & Telepon (Format Waktu Simpel Bersih)
       var per = data.perizinan || {};
       var tel = data.telepon || {};
       var izContainer = document.getElementById('modal-izin-list');
@@ -1764,13 +1816,19 @@
       } else {
         izHtml += '<div class="list-group list-group-flush border rounded-3 modal-tab-scroll">';
         izList.forEach(function(iz) {
+          var wMulai = iz.waktuMulai ? formatWaktuIzinSimpel(iz.waktuMulai) : (iz.tanggal || '-');
+          var wKembali = iz.waktuKembali ? formatWaktuIzinSimpel(iz.waktuKembali) : '-';
           izHtml += 
-            '<div class="list-group-item p-2">' +
-              '<div class="d-flex justify-content-between">' +
-                '<span class="fw-bold">' + escapeHtml(iz.jenis || 'Izin') + '</span>' +
+            '<div class="list-group-item p-2.5">' +
+              '<div class="d-flex justify-content-between align-items-center mb-1">' +
+                '<span class="fw-bold text-dark"><i class="bi bi-clock-history me-1 text-primary"></i>' + escapeHtml(iz.kategori || iz.jenis || 'Izin') + '</span>' +
                 '<span class="badge bg-secondary">' + escapeHtml(iz.status || '-') + '</span>' +
               '</div>' +
-              '<div class="small text-muted">' + escapeHtml(iz.tanggal || '-') + ' (' + escapeHtml(iz.keperluan || '-') + ')</div>' +
+              '<div class="small text-dark mb-1"><strong>Alasan:</strong> ' + escapeHtml(iz.alasan || iz.keperluan || '-') + '</div>' +
+              '<div class="small text-muted d-flex flex-wrap gap-2">' +
+                '<span><i class="bi bi-box-arrow-right text-warning me-0.5"></i>Berangkat: <strong>' + escapeHtml(wMulai) + '</strong></span>' +
+                (wKembali !== '-' ? ('<span><i class="bi bi-box-arrow-in-left text-success me-0.5"></i>Kembali: <strong>' + escapeHtml(wKembali) + '</strong></span>') : '') +
+              '</div>' +
             '</div>';
         });
         izHtml += '</div>';
@@ -1798,7 +1856,68 @@
       izHtml += '</div></div>';
       izContainer.innerHTML = izHtml;
 
-      // 5. Riwayat Catatan Buku Penghubung
+      // 5. Kesimpulan & Rekomendasi Pengasuhan Santri
+      var elKesimpulanBox = document.getElementById('public-modal-kesimpulan-box');
+      var kesimpulanData = generateNarasiKesimpulanLaporan(data);
+      publicState.currentKesimpulan = kesimpulanData;
+
+      if (elKesimpulanBox) {
+        elKesimpulanBox.innerHTML = 
+          '<div class="mb-3">' +
+            '<div class="d-flex align-items-center justify-content-between p-3 rounded-3 mb-3 border shadow-2xs" style="background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%); border-color: #a7f3d0 !important;">' +
+              '<div>' +
+                '<div class="text-success small fw-bold text-uppercase" style="letter-spacing: 0.5px; font-size: 11px;">STATUS EVALUASI AKHIR</div>' +
+                '<h5 class="fw-bold text-dark mb-0">' + escapeHtml(kesimpulanData.statusJudul) + '</h5>' +
+              '</div>' +
+              '<span class="badge ' + kesimpulanData.statusBadge + ' px-3 py-2 rounded-pill fw-bold shadow-2xs" style="font-size: 12px;">' +
+                '<i class="bi bi-patch-check-fill me-1"></i>' + escapeHtml(data.overallSummary ? (data.overallSummary.predikat || 'MUMTAZ') : 'MUMTAZ') +
+              '</span>' +
+            '</div>' +
+
+            '<div class="card border-0 shadow-2xs rounded-3 bg-white p-3 mb-3" style="border-left: 4px solid #10b981 !important;">' +
+              '<div class="d-flex align-items-center gap-2 mb-2">' +
+                '<span class="badge bg-success text-white rounded-circle p-1"><i class="bi bi-star-fill"></i></span>' +
+                '<h6 class="fw-bold mb-0 text-success" style="font-size: 13.5px;">1. Capaian &amp; Keunggulan Santri</h6>' +
+              '</div>' +
+              '<p class="small text-secondary mb-0" style="line-height: 1.6; font-size: 12.5px;">' +
+                kesimpulanData.narasiPujian +
+              '</p>' +
+            '</div>' +
+
+            '<div class="card border-0 shadow-2xs rounded-3 bg-white p-3 mb-3" style="border-left: 4px solid #f59e0b !important;">' +
+              '<div class="d-flex align-items-center gap-2 mb-2">' +
+                '<span class="badge bg-warning text-dark rounded-circle p-1"><i class="bi bi-compass-fill"></i></span>' +
+                '<h6 class="fw-bold mb-0 text-warning text-darken" style="font-size: 13.5px;">2. Catatan Evaluasi &amp; Aspek Penguatan</h6>' +
+              '</div>' +
+              '<p class="small text-secondary mb-0" style="line-height: 1.6; font-size: 12.5px;">' +
+                kesimpulanData.narasiFokus +
+              '</p>' +
+            '</div>' +
+
+            (kesimpulanData.narasiKesehatan ? 
+              '<div class="card border-0 shadow-2xs rounded-3 bg-white p-3 mb-3" style="border-left: 4px solid #06b6d4 !important;">' +
+                '<div class="d-flex align-items-center gap-2 mb-1.5">' +
+                  '<span class="badge bg-info text-white rounded-circle p-1"><i class="bi bi-heart-pulse-fill"></i></span>' +
+                  '<h6 class="fw-bold mb-0 text-info" style="font-size: 13px;">3. Catatan Medis &amp; Postur Fisik (UKS)</h6>' +
+                '</div>' +
+                '<p class="small text-secondary mb-0" style="line-height: 1.5; font-size: 12px;">' +
+                  kesimpulanData.narasiKesehatan +
+                '</p>' +
+              '</div>' : '') +
+
+            '<div class="card border-0 shadow-2xs rounded-3 bg-light p-3" style="border: 1px dashed #cbd5e1 !important;">' +
+              '<div class="d-flex align-items-center gap-2 mb-2">' +
+                '<span class="badge bg-primary text-white rounded-circle p-1"><i class="bi bi-people-fill"></i></span>' +
+                '<h6 class="fw-bold mb-0 text-primary" style="font-size: 13.5px;">4. Rekomendasi Sinergi Pembinaan Orang Tua &amp; Pondok</h6>' +
+              '</div>' +
+              '<p class="small text-secondary mb-0 fst-italic" style="line-height: 1.6; font-size: 12.5px;">' +
+                kesimpulanData.narasiPesanOrtu +
+              '</p>' +
+            '</div>' +
+          '</div>';
+      }
+
+      // 6. Riwayat Catatan Buku Penghubung
       var catWali = data.catatanBukuPenghubung || [];
       var catContainer = document.getElementById('modal-catatan-wali-list');
       if (catWali.length === 0) {
@@ -1832,7 +1951,7 @@
 
     // Tab Switching Manual di Modal (Sesuai AGENTS.md Rule 7)
     function switchPublicTab(tabKey) {
-      var tabs = ['amalyaumi', 'uks', 'disiplin', 'izin', 'penghubung'];
+      var tabs = ['amalyaumi', 'uks', 'disiplin', 'izin', 'kesimpulan', 'penghubung'];
       tabs.forEach(function(k) {
         var btn = document.getElementById('tab-btn-' + k);
         var pane = document.getElementById('pane-' + k);
@@ -1979,6 +2098,282 @@
         "_Pengasuhan Kesantrian - Ponpes Imam Syafi'i Brebes_";
 
       window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+    }
+
+    // Helper Format Waktu Sederhana untuk Perizinan (DD MMM YYYY, HH:mm WIB)
+    function formatWaktuIzinSimpel(val) {
+      if (!val || val === '-' || String(val).trim() === '') return '-';
+      var d = null;
+      if (val instanceof Date) {
+        d = val;
+      } else if (typeof val === 'string') {
+        var str = val.trim();
+        if (str.indexOf('WIB') > -1 && str.indexOf('GMT') === -1 && !str.match(/Sun|Mon|Tue|Wed|Thu|Fri|Sat/i)) {
+          return str;
+        }
+        var parsed = new Date(str);
+        if (!isNaN(parsed.getTime())) {
+          d = parsed;
+        } else {
+          parsed = new Date(str.replace(' ', 'T'));
+          if (!isNaN(parsed.getTime())) {
+            d = parsed;
+          } else {
+            var m = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})(?:\s+(\d{1,2}):(\d{2}))?/);
+            if (m) {
+              d = new Date(parseInt(m[3]), parseInt(m[2]) - 1, parseInt(m[1]), parseInt(m[4] || 0), parseInt(m[5] || 0));
+            }
+          }
+        }
+      }
+      if (d && !isNaN(d.getTime())) {
+        var bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
+        var tgl = d.getDate();
+        var bln = bulanList[d.getMonth()];
+        var thn = d.getFullYear();
+        var jam = ('0' + d.getHours()).slice(-2);
+        var mnt = ('0' + d.getMinutes()).slice(-2);
+        return tgl + ' ' + bln + ' ' + thn + ', ' + jam + ':' + mnt + ' WIB';
+      }
+      return String(val).replace(/GMT\+0700.*/i, '').replace(/Sun|Mon|Tue|Wed|Thu|Fri|Sat/i, '').trim();
+    }
+
+    // Generator Narasi Kesimpulan Laporan Santri Komprehensif
+    function generateNarasiKesimpulanLaporan(data) {
+      if (!data) return {
+        statusJudul: 'Evaluasi Perkembangan',
+        statusBadge: 'bg-primary text-white',
+        narasiPujian: '-',
+        narasiFokus: '-',
+        narasiKesehatan: '',
+        narasiPesanOrtu: '-'
+      };
+
+      var p = data.profile || {};
+      var ov = data.overallSummary || data.overall || {};
+      var p4 = data.pilar4 || data.pilars || {};
+      var pMin = data.pelanggaran ? (data.pelanggaran.totalPoinMinus || 0) : 0;
+      var pRew = data.reward ? (data.reward.totalPoinReward || 0) : 0;
+      var pNet = Math.max(0, pMin - pRew);
+      var kes = data.kesehatan || {};
+      var fisik = kes.fisikTerkini || {};
+      var pct = ov.persen || ov.percent || 100;
+      var gr = ov.grade || (pct >= 90 ? 'A' : (pct >= 75 ? 'B' : (pct >= 60 ? 'C' : 'D')));
+      var pred = ov.predikat || (gr === 'A' ? 'MUMTAZ (SANGAT BAIK)' : (gr === 'B' ? 'JAYYID JIDDAN (BAIK SEKALI)' : (gr === 'C' ? 'JAYYID (CUKUP/BAIK)' : 'MAQBUL (PERLU BIMBINGAN)')));
+
+      var nama = p.nama || 'Ananda';
+
+      var statusJudul = 'Perkembangan Sangat Baik & Berprestasi';
+      var statusBadge = 'bg-success text-white';
+      if (gr === 'A' && pNet === 0) {
+        statusJudul = 'Mumtaz & Teladan (Nihil Pelanggaran)';
+        statusBadge = 'bg-success text-white';
+      } else if (gr === 'A' || gr === 'B') {
+        if (pNet <= 20) {
+          statusJudul = 'Perkembangan Positif & Berdisiplin';
+          statusBadge = 'bg-primary text-white';
+        } else {
+          statusJudul = 'Capaian Ibadah Baik, Perlu Penguatan Disiplin';
+          statusBadge = 'bg-warning text-dark';
+        }
+      } else {
+        statusJudul = 'Perlu Pendampingan Intensif Bersama';
+        statusBadge = 'bg-warning text-dark';
+      }
+
+      // 1. Narasi Pujian
+      var wajibBaik = (p4.wajib && p4.wajib.baik) ? p4.wajib.baik : 'Shalat 5 waktu berjamaah di masjid';
+      var sunnahBaik = (p4.sunnah && p4.sunnah.baik) ? p4.sunnah.baik : 'Shalat rawatib, witir, dan puasa sunnah';
+      var disBaik = (p4.disiplin && p4.disiplin.baik) ? p4.disiplin.baik : 'Ketepatan waktu dan kebersihan asrama';
+      var adabBaik = (p4.adab && p4.adab.baik) ? p4.adab.baik : 'Adab sopan santun dan persaudaraan';
+
+      var pujian = "Alhamdulillah pada periode ini ananda <strong>" + escapeHtml(nama) + "</strong> meraih skor Mutaba'ah Amal Yaumi sebesar <strong>" + pct + "% (Grade " + gr + " - " + escapeHtml(pred) + ")</strong>. ";
+      pujian += "Keunggulan utama yang konsisten ditunjukkan ananda antara lain pada <em>Ibadah Wajib</em> (" + escapeHtml(wajibBaik) + "), serta keaktifan <em>Amalan Sunnah</em> (" + escapeHtml(sunnahBaik) + "). ";
+      pujian += "Dalam aspek kedisiplinan dan adab harian, ananda terpantau aktif dalam " + escapeHtml(disBaik) + " dan senantiasa menjaga " + escapeHtml(adabBaik) + ". ";
+      if (pRew > 0) {
+        pujian += "Ananda juga berhasil mengumpulkan <strong>+" + pRew + " poin reward/apresiasi</strong> atas keteladanan dan inisiatif kebaikan yang dilakukan.";
+      }
+
+      // 2. Narasi Fokus
+      var wajibKuat = (p4.wajib && (p4.wajib.perluDikuatkan || p4.wajib.kuat)) ? (p4.wajib.perluDikuatkan || p4.wajib.kuat) : '';
+      var sunnahKuat = (p4.sunnah && (p4.sunnah.perluDikuatkan || p4.sunnah.kuat)) ? (p4.sunnah.perluDikuatkan || p4.sunnah.kuat) : '';
+      var disKuat = (p4.disiplin && (p4.disiplin.perluDikuatkan || p4.disiplin.kuat)) ? (p4.disiplin.perluDikuatkan || p4.disiplin.kuat) : '';
+      var adabKuat = (p4.adab && (p4.adab.perluDikuatkan || p4.adab.kuat)) ? (p4.adab.perluDikuatkan || p4.adab.kuat) : '';
+
+      var fokusList = [];
+      if (wajibKuat && !wajibKuat.includes('Alhamdulillah seluruh')) fokusList.push('Ibadah Wajib: ' + wajibKuat);
+      if (sunnahKuat && !sunnahKuat.includes('Alhamdulillah seluruh')) fokusList.push('Amalan Sunnah: ' + sunnahKuat);
+      if (disKuat && !disKuat.includes('Alhamdulillah seluruh')) fokusList.push('Kedisiplinan: ' + disKuat);
+      if (adabKuat && !adabKuat.includes('Alhamdulillah seluruh')) fokusList.push('Adab & Pergaulan: ' + adabKuat);
+
+      var fokus = "";
+      if (pNet === 0 && pMin === 0) {
+        fokus = "Catatan kedisiplinan ananda <strong>sangat bersih tanpa pelanggaran (0 poin)</strong>. Seluruh target pembiasaan santri telah dijalankan dengan sangat tertib. Musyrif berfokus menjaga keistiqamahan ananda agar tetap menjadi teladan bagi teman-teman sekamar.";
+      } else if (pNet === 0 && pMin > 0) {
+        fokus = "Terdapat catatan teguran ringan kedisiplinan sebesar -" + pMin + " poin, namun <strong>telah ditebus tuntas</strong> melalui perolehan reward apresiasi (+" + pRew + " poin), sehingga akumulasi poin bersih ananda <strong>0 Poin (Aman & Bersih)</strong>. Terus pertahankan semangat memperbaiki diri.";
+      } else {
+        fokus = "Akumulasi poin pelanggaran bersih ananda tercatat <strong>" + pNet + " poin</strong> (dari total -" + pMin + " poin pelanggaran setelah dikurangi +" + pRew + " poin reward apresiasi). ";
+        if (fokusList.length > 0) {
+          fokus += "Hal-hal yang menjadi perhatian asatidz dan musyrif untuk terus dikuatkan meliputi: " + escapeHtml(fokusList.join("; ")) + ". ";
+        }
+        fokus += "Bimbingan persuasif dan pembinaan harian terus diberikan agar ananda semakin disiplin dalam manajemen waktu dan ketertiban asrama.";
+      }
+
+      // 3. Narasi Kesehatan
+      var narasiKesehatan = "";
+      if (fisik && (fisik.beratBadan > 0 || fisik.tinggiBadan > 0)) {
+        narasiKesehatan = "Kondisi fisik ananda terpantau dengan berat badan " + fisik.beratBadan + " kg dan tinggi badan " + fisik.tinggiBadan + " cm (status indeks massa tubuh: <strong>" + (fisik.kategoriImt || 'Ideal/Normal') + "</strong>). ";
+      }
+      if (kes.totalKunjungan > 0 || (kes.riwayat && kes.riwayat.length > 0)) {
+        var totK = kes.totalKunjungan || kes.riwayat.length;
+        narasiKesehatan += "Tercatat " + totK + " kali kunjungan/pemeriksaan kesehatan ke Poskestren (UKS) bulan ini dan seluruhnya telah tertangani dengan baik oleh tim medis pondok.";
+      } else {
+        narasiKesehatan += (narasiKesehatan ? "" : "Alhamdulillah ") + "selama bulan ini ananda senantiasa bugar dan sehat prima, nihil keluhan sakit atau catatan rawat inap di UKS.";
+      }
+
+      // 4. Rekomendasi Sinergi Orang Tua
+      var pesanOrtu = "Kami memohon kepada Ayah/Bunda untuk terus mendoakan dan mengapresiasi setiap usaha kebaikan yang ditunjukkan ananda. Ketika ananda mendapatkan giliran izin pulang ke rumah, mohon untuk tetap mengawal shalat berjamaah 5 waktu di masjid, tilawah Al-Qur'an harian, serta membatasi penggunaan gawai (gadget) agar ritme disiplin pondok tetap selaras di rumah.";
+
+      return {
+        statusJudul: statusJudul,
+        statusBadge: statusBadge,
+        narasiPujian: pujian,
+        narasiFokus: fokus,
+        narasiKesehatan: narasiKesehatan,
+        narasiPesanOrtu: pesanOrtu
+      };
+    }
+
+    // Export PDF Public
+    function simpanLaporanSebagaiPdf() {
+      var cur = publicState.selectedSantriDetail;
+      var nama = (cur && cur.profile && cur.profile.nama) ? cur.profile.nama.replace(/[^a-zA-Z0-9]/g, '_') : 'Santri';
+      var nis = (cur && cur.profile && cur.profile.nis) ? cur.profile.nis : '';
+      var el = document.getElementById('modal-zoom-container') || document.querySelector('#modalPublicDetailSantri .modal-content');
+      if (!el) {
+        showToast('Konten rapor belum siap untuk diunduh.', 'warning');
+        return;
+      }
+
+      var oldZoom = currentModalZoom || 1.0;
+      applyModalZoom(1.0);
+      showToast('Menyiapkan dokumen PDF...', 'info');
+
+      var opt = {
+        margin: [6, 6, 6, 6],
+        filename: 'Rapor_Santri_' + nama + (nis ? '_' + nis : '') + '.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      if (window.html2pdf) {
+        window.html2pdf().set(opt).from(el).save().then(function() {
+          applyModalZoom(oldZoom);
+          showToast('Dokumen PDF berhasil diunduh!', 'success');
+        }).catch(function(err) {
+          applyModalZoom(oldZoom);
+          showToast('Gagal membuat PDF: ' + err.message, 'danger');
+        });
+      } else {
+        window.print();
+      }
+    }
+
+    // Export Gambar PNG Public
+    function simpanLaporanSebagaiGambar() {
+      var cur = publicState.selectedSantriDetail;
+      var nama = (cur && cur.profile && cur.profile.nama) ? cur.profile.nama.replace(/[^a-zA-Z0-9]/g, '_') : 'Santri';
+      var nis = (cur && cur.profile && cur.profile.nis) ? cur.profile.nis : '';
+      var el = document.getElementById('modal-zoom-container') || document.querySelector('#modalPublicDetailSantri .modal-content');
+      if (!el) {
+        showToast('Konten rapor belum siap untuk disimpan.', 'warning');
+        return;
+      }
+
+      var oldZoom = currentModalZoom || 1.0;
+      applyModalZoom(1.0);
+      showToast('Memproses gambar laporan HD...', 'info');
+
+      if (window.html2canvas) {
+        window.html2canvas(el, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#f8fafc',
+          logging: false
+        }).then(function(canvas) {
+          applyModalZoom(oldZoom);
+          var link = document.createElement('a');
+          link.download = 'Rapor_Santri_' + nama + (nis ? '_' + nis : '') + '.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+          showToast('Gambar laporan berhasil disimpan!', 'success');
+        }).catch(function(err) {
+          applyModalZoom(oldZoom);
+          showToast('Gagal memproses gambar: ' + err.message, 'danger');
+        });
+      } else {
+        showToast('Fitur gambar belum terpasang.', 'warning');
+      }
+    }
+
+    function salinKesimpulanSantriPublic() {
+      var cur = publicState.selectedSantriDetail;
+      var k = publicState.currentKesimpulan;
+      if (!cur || !k) {
+        showToast('Data kesimpulan belum tersedia.', 'warning');
+        return;
+      }
+      var p = cur.profile || {};
+      var text = "📋 *KESIMPULAN PERKEMBANGAN SANTRI*\n" +
+        "👤 *Nama:* " + (p.nama || '-') + " (" + (p.nis || '-') + " - " + (p.kelas || '-') + ")\n" +
+        "⭐ *Status:* " + k.statusJudul + "\n\n" +
+        "🌟 *1. Keunggulan & Capaian:*\n" + k.narasiPujian.replace(/<[^>]*>/g, '') + "\n\n" +
+        "🎯 *2. Fokus Penguatan:*\n" + k.narasiFokus.replace(/<[^>]*>/g, '') + "\n\n" +
+        (k.narasiKesehatan ? ("🩺 *3. Catatan Medis & Fisik:*\n" + k.narasiKesehatan.replace(/<[^>]*>/g, '') + "\n\n") : "") +
+        "🤝 *4. Rekomendasi Sinergi Rumah & Pondok:*\n" + k.narasiPesanOrtu;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+          showToast('Kesimpulan berhasil disalin!', 'success');
+        }).catch(function() {
+          prompt('Salin teks kesimpulan:', text);
+        });
+      } else {
+        prompt('Salin teks kesimpulan:', text);
+      }
+    }
+
+    function kirimKesimpulanWaPublic() {
+      var cur = publicState.selectedSantriDetail;
+      var k = publicState.currentKesimpulan;
+      if (!cur || !k) {
+        showToast('Data kesimpulan belum tersedia.', 'warning');
+        return;
+      }
+      var p = cur.profile || {};
+      var hp = p.noHpWali || '';
+      if (!hp || hp.trim() === '') {
+        var inp = prompt('Nomor WA Wali Santri belum terdata. Masukkan nomor WhatsApp tujuan (08...):');
+        if (!inp) return;
+        hp = inp.trim();
+      }
+      hp = hp.replace(/\D/g, '');
+      if (hp.startsWith('0')) hp = '62' + hp.substring(1);
+
+      var text = "Assalamu'alaikum Warahmatullahi Wabarakatuh\n\n" +
+        "Yth. Wali Santri dari ananda *" + (p.nama || 'Santri') + "*,\n\n" +
+        "Berikut *Rangkuman & Kesimpulan Evaluasi Pengasuhan Santri* periode ini di Pondok Pesantren Imam Syafi'i Brebes:\n\n" +
+        "🏆 *Status Evaluasi:* " + k.statusJudul + "\n\n" +
+        "🌟 *1. Capaian & Keunggulan Santri:*\n" + k.narasiPujian.replace(/<[^>]*>/g, '') + "\n\n" +
+        "🎯 *2. Catatan Evaluasi & Penguatan:*\n" + k.narasiFokus.replace(/<[^>]*>/g, '') + "\n\n" +
+        (k.narasiKesehatan ? ("🩺 *3. Catatan Medis & Postur Fisik:*\n" + k.narasiKesehatan.replace(/<[^>]*>/g, '') + "\n\n") : "") +
+        "🤝 *4. Rekomendasi Sinergi Pembinaan:*\n" + k.narasiPesanOrtu + "\n\n" +
+        "Jazakumullahu khairan wa barakallahu fiikum.\n" +
+        "_Pengasuhan Kesantrian - Ponpes Imam Syafi'i Brebes_";
+
+      window.open("https://wa.me/" + hp + "?text=" + encodeURIComponent(text), '_blank');
     }
   </script>
 </body>
