@@ -743,6 +743,11 @@
                     <i class="bi bi-door-open me-1"></i> Izin &amp; Telepon
                   </button>
                 </li>
+                <li class="nav-item" id="nav-item-public-laundry" style="display: none;">
+                  <button class="nav-link btn-sm rounded-pill fw-bold text-nowrap" id="tab-btn-laundry" onclick="switchPublicTab('laundry')">
+                    <i class="bi bi-basket3 me-1"></i> Tagihan Laundry
+                  </button>
+                </li>
                 <li class="nav-item">
                   <button class="nav-link btn-sm rounded-pill fw-bold text-nowrap" id="tab-btn-kesimpulan" onclick="switchPublicTab('kesimpulan')">
                     <i class="bi bi-award-fill text-warning me-1"></i> Kesimpulan &amp; Rekomendasi
@@ -842,6 +847,84 @@
                 <h6 class="fw-bold mb-3 text-dark"><i class="bi bi-card-checklist text-primary me-1"></i>Riwayat Perizinan &amp; Layanan Wartel</h6>
                 <div id="modal-izin-list" class="small">
                   <!-- Populated dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB TAGIHAN LAUNDRY (KONDISIONAL) -->
+            <div class="tab-pane fade" id="pane-laundry">
+              <div class="row g-2 mb-3">
+                <div class="col-6 col-md-3">
+                  <div class="card h-100 border-0 shadow-2xs rounded-3 p-2.5 bg-white text-center" style="border-top: 3px solid #1e293b !important;">
+                    <div class="small text-muted fw-bold" style="font-size: 10.5px;">TOTAL TAGIHAN</div>
+                    <div class="fw-bold text-dark fs-6 my-1" id="public-lnd-total-tagihan">Rp 0</div>
+                    <div class="text-muted" style="font-size: 10px;">Semua Bulan</div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="card h-100 border-0 shadow-2xs rounded-3 p-2.5 bg-white text-center" style="border-top: 3px solid #10b981 !important;">
+                    <div class="small text-success fw-bold" style="font-size: 10.5px;">SUDAH DIBAYAR</div>
+                    <div class="fw-bold text-success fs-6 my-1" id="public-lnd-sudah-bayar">Rp 0</div>
+                    <div class="text-muted" style="font-size: 10px;">Lunas Disetor</div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="card h-100 border-0 shadow-2xs rounded-3 p-2.5 bg-white text-center" style="border-top: 3px solid #ef4444 !important;">
+                    <div class="small text-danger fw-bold" style="font-size: 10.5px;">BELUM DIBAYAR</div>
+                    <div class="fw-bold text-danger fs-6 my-1" id="public-lnd-belum-bayar">Rp 0</div>
+                    <div class="text-muted" style="font-size: 10px;">Tunggakan Sisa</div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="card h-100 border-0 shadow-2xs rounded-3 p-2.5 bg-white text-center" style="border-top: 3px solid #06b6d4 !important;">
+                    <div class="small text-info fw-bold" style="font-size: 10.5px;">TOTAL CUCIAN</div>
+                    <div class="fw-bold text-dark fs-6 my-1" id="public-lnd-total-kg">0 kg</div>
+                    <div class="text-muted" style="font-size: 10px;"><span id="public-lnd-total-sesi">0</span> Kali Setor</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- REKAP TAGIHAN PER BULAN -->
+              <div class="card border-0 shadow-2xs rounded-3 bg-white p-3 mb-3">
+                <h6 class="fw-bold mb-2 text-dark small"><i class="bi bi-calendar3-range text-primary me-1"></i>Rekap Tagihan Laundry Per Bulan</h6>
+                <div class="table-responsive modal-tab-scroll">
+                  <table class="table table-sm table-hover align-middle border mb-0 text-nowrap" style="font-size: 12px;">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Bulan</th>
+                        <th class="text-center">Berat</th>
+                        <th class="text-center">Kuota</th>
+                        <th class="text-center">Lebihan</th>
+                        <th class="text-end">Tagihan</th>
+                        <th class="text-end text-success">Sudah Bayar</th>
+                        <th class="text-end text-danger">Belum Bayar</th>
+                        <th class="text-center">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="public-tbody-rekap-laundry">
+                      <tr><td colspan="8" class="text-center py-2 text-muted">Belum ada rekap laundry.</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- RINCIAN SETOR CUCIAN -->
+              <div class="card border-0 shadow-2xs rounded-3 bg-white p-3">
+                <h6 class="fw-bold mb-2 text-dark small"><i class="bi bi-clock-history text-secondary me-1"></i>Rincian Riwayat Penyerahan Cucian</h6>
+                <div class="table-responsive modal-tab-scroll">
+                  <table class="table table-sm table-hover align-middle border mb-0" style="font-size: 12px;">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Tanggal Setor</th>
+                        <th>Berat</th>
+                        <th>Catatan</th>
+                        <th class="text-center">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="public-tbody-detail-laundry">
+                      <tr><td colspan="4" class="text-center py-2 text-muted">Belum ada riwayat penyerahan cucian.</td></tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
@@ -2033,6 +2116,86 @@
       izHtml += '</div></div>';
       izContainer.innerHTML = izHtml;
 
+      // 4b. Tab Tagihan Laundry Publik (Kondisional: jika ada tagihan saja dimunculkan)
+      var lnd = data.laundry || {};
+      var hasTagihanLnd = !!(lnd.hasTagihan || (lnd.totalSemuaTagihan > 0));
+      var navItemLnd = document.getElementById('nav-item-public-laundry');
+      var paneLnd = document.getElementById('pane-laundry');
+
+      if (!hasTagihanLnd) {
+        if (navItemLnd) navItemLnd.style.display = 'none';
+        if (paneLnd) paneLnd.classList.remove('show', 'active');
+      } else {
+        if (navItemLnd) {
+          navItemLnd.style.display = '';
+          var btnLnd = document.getElementById('tab-btn-laundry');
+          if (btnLnd) {
+            var hasTunggakan = (lnd.totalBelumBayar > 0);
+            var badgeSts = hasTunggakan ? '<span class="badge bg-danger ms-1" style="font-size:10px;">Belum Lunas</span>' : '<span class="badge bg-success ms-1" style="font-size:10px;">Lunas</span>';
+            btnLnd.innerHTML = '<i class="bi bi-basket3 me-1"></i> Tagihan Laundry ' + badgeSts;
+          }
+        }
+
+        var elPTotTagihan = document.getElementById('public-lnd-total-tagihan');
+        var elPTotSudah = document.getElementById('public-lnd-sudah-bayar');
+        var elPTotBelum = document.getElementById('public-lnd-belum-bayar');
+        var elPTotKg = document.getElementById('public-lnd-total-kg');
+        var elPTotSesi = document.getElementById('public-lnd-total-sesi');
+
+        if (elPTotTagihan) elPTotTagihan.textContent = 'Rp ' + Number(lnd.totalSemuaTagihan || 0).toLocaleString('id-ID');
+        if (elPTotSudah) elPTotSudah.textContent = 'Rp ' + Number(lnd.totalSudahBayar || 0).toLocaleString('id-ID');
+        if (elPTotBelum) elPTotBelum.textContent = 'Rp ' + Number(lnd.totalBelumBayar || 0).toLocaleString('id-ID');
+        if (elPTotKg) elPTotKg.textContent = (Number(lnd.totalSemuaKg) || 0) + ' kg';
+        if (elPTotSesi) elPTotSesi.textContent = (lnd.totalSesi || (lnd.riwayatSemua ? lnd.riwayatSemua.length : 0));
+
+        var tbRekap = document.getElementById('public-tbody-rekap-laundry');
+        if (tbRekap) {
+          var rListLnd = lnd.rekapBulanan || [];
+          if (rListLnd.length === 0) {
+            tbRekap.innerHTML = '<tr><td colspan="8" class="text-center py-2 text-muted">Belum ada riwayat tagihan laundry.</td></tr>';
+          } else {
+            tbRekap.innerHTML = rListLnd.map(function(rb) {
+              var stsColor = 'bg-success';
+              if (rb.statusBayar === 'Belum Bayar') stsColor = 'bg-danger';
+              else if (rb.statusBayar.includes('Belum Lunas')) stsColor = 'bg-warning text-dark';
+              return '<tr>' +
+                '<td class="fw-semibold text-dark">' + escapeHtml(rb.bulanNama || rb.bulan) + '</td>' +
+                '<td class="text-center fw-bold text-primary">' + rb.totalKg + ' kg</td>' +
+                '<td class="text-center text-muted">' + rb.batasKg + ' kg</td>' +
+                '<td class="text-center ' + (rb.lebihanKg > 0 ? 'text-danger fw-bold' : 'text-muted') + '">' + (rb.lebihanKg > 0 ? (rb.lebihanKg + ' kg') : '-') + '</td>' +
+                '<td class="text-end fw-bold text-dark">Rp ' + Number(rb.tagihan || 0).toLocaleString('id-ID') + '</td>' +
+                '<td class="text-end text-success fw-bold">Rp ' + Number(rb.sudahBayar || 0).toLocaleString('id-ID') + '</td>' +
+                '<td class="text-end ' + (rb.belumBayar > 0 ? 'text-danger fw-bold' : 'text-muted') + '">Rp ' + Number(rb.belumBayar || 0).toLocaleString('id-ID') + '</td>' +
+                '<td class="text-center"><span class="badge ' + stsColor + '">' + escapeHtml(rb.statusBayar) + '</span></td>' +
+              '</tr>';
+            }).join('');
+          }
+        }
+
+        var tbDetTrx = document.getElementById('public-tbody-detail-laundry');
+        if (tbDetTrx) {
+          var trxAll = lnd.riwayatSemua || lnd.riwayat || [];
+          if (trxAll.length === 0) {
+            tbDetTrx.innerHTML = '<tr><td colspan="4" class="text-center py-2 text-muted">Belum ada riwayat penyerahan cucian.</td></tr>';
+          } else {
+            tbDetTrx.innerHTML = trxAll.map(function(t) {
+              var isLunas = (t.statusBayar || '').toLowerCase().includes('lunas');
+              var bClass = isLunas ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-danger-subtle text-danger border border-danger-subtle';
+              var cNote = t.catatan || 'Cuci reguler asrama';
+              if (typeof cNote === 'string' && cNote.trim().startsWith('{')) {
+                try { cNote = JSON.parse(cNote).notes || 'Cuci reguler asrama'; } catch(e){}
+              }
+              return '<tr>' +
+                '<td class="fw-semibold">' + escapeHtml(t.tanggal) + '</td>' +
+                '<td class="fw-bold text-primary">' + t.beratKg + ' kg</td>' +
+                '<td>' + escapeHtml(cNote) + '</td>' +
+                '<td class="text-center"><span class="badge ' + bClass + '">' + escapeHtml(t.statusBayar || 'Belum Bayar') + '</span></td>' +
+              '</tr>';
+            }).join('');
+          }
+        }
+      }
+
       // 5. Kesimpulan & Rekomendasi Pengasuhan Santri
       var elKesimpulanBox = document.getElementById('public-modal-kesimpulan-box');
       var kesimpulanData = generateNarasiKesimpulanLaporan(data);
@@ -2128,7 +2291,7 @@
 
     // Tab Switching Manual di Modal (Sesuai AGENTS.md Rule 7)
     function switchPublicTab(tabKey) {
-      var tabs = ['amalyaumi', 'uks', 'disiplin', 'izin', 'kesimpulan', 'penghubung'];
+      var tabs = ['amalyaumi', 'uks', 'disiplin', 'izin', 'laundry', 'kesimpulan', 'penghubung'];
       tabs.forEach(function(k) {
         var btn = document.getElementById('tab-btn-' + k);
         var pane = document.getElementById('pane-' + k);
