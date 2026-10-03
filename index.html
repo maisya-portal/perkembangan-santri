@@ -355,32 +355,103 @@
       </div>
     </div>
 
-    <!-- FILTER / SEARCH & STATS ROW -->
+    <!-- 6 METRIK STATISTIK RINGKASAN INTERAKTIF (BISA DIKLIK UNTUK FILTER) -->
     <div class="row g-2 mb-3">
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="text-muted small fw-medium" style="font-size: 11px;">Total Santri</div>
-          <h5 class="fw-bold mb-0 text-dark" id="stat-total-santri">0 Santri</h5>
+      <!-- 1. TOTAL SANTRI AKTIF -->
+      <div class="col-6 col-md-4 col-xl-2">
+        <div class="stat-card cursor-pointer" id="card-filter-all" onclick="filterSantriByWidget('all')" title="Klik untuk menampilkan seluruh santri aktif">
+          <div class="d-flex align-items-center gap-2">
+            <div class="rounded-circle bg-primary-subtle text-primary p-2 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">
+              <i class="bi bi-people-fill fs-5"></i>
+            </div>
+            <div style="min-width: 0;">
+              <div class="text-muted small fw-medium text-truncate" style="font-size: 10.5px;">Santri Aktif</div>
+              <h6 class="fw-bold mb-0 text-dark text-truncate" id="stat-total-santri" style="font-size: 13.5px;">0 Santri</h6>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="text-muted small fw-medium" style="font-size: 11px;">Ibadah Mumtaz (A)</div>
-          <h5 class="fw-bold mb-0 text-success" id="stat-ibadah-mumtaz">0 Santri</h5>
+      <!-- 2. IBADAH MUMTAZ (A) -->
+      <div class="col-6 col-md-4 col-xl-2">
+        <div class="stat-card cursor-pointer" id="card-filter-mumtaz" onclick="filterSantriByWidget('mumtaz')" title="Klik untuk memfilter santri Ibadah Mumtaz (Grade A)">
+          <div class="d-flex align-items-center gap-2">
+            <div class="rounded-circle bg-success-subtle text-success p-2 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">
+              <i class="bi bi-check-circle-fill fs-5"></i>
+            </div>
+            <div style="min-width: 0;">
+              <div class="text-muted small fw-medium text-truncate" style="font-size: 10.5px;">Ibadah Mumtaz</div>
+              <h6 class="fw-bold mb-0 text-success text-truncate" id="stat-ibadah-mumtaz" style="font-size: 13.5px;">0 Santri</h6>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="text-muted small fw-medium" style="font-size: 11px;">Catatan UKS Bulan Ini</div>
-          <h5 class="fw-bold mb-0 text-dark" id="stat-catatan-uks">0 Santri</h5>
+      <!-- 3. IBADAH PERLU BIMBINGAN (C/D) -->
+      <div class="col-6 col-md-4 col-xl-2">
+        <div class="stat-card cursor-pointer" id="card-filter-bimbingan" onclick="filterSantriByWidget('bimbingan')" title="Klik untuk memfilter santri Ibadah Perlu Bimbingan (Grade C/D)">
+          <div class="d-flex align-items-center gap-2">
+            <div class="rounded-circle p-2 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px; background: #fff7ed; color: #ea580c;">
+              <i class="bi bi-exclamation-circle-fill fs-5"></i>
+            </div>
+            <div style="min-width: 0;">
+              <div class="text-muted small fw-medium text-truncate" style="font-size: 10.5px;">Perlu Bimbingan</div>
+              <h6 class="fw-bold mb-0 text-truncate" id="stat-ibadah-bimbingan" style="font-size: 13.5px; color: #ea580c;">0 Santri</h6>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="text-muted small fw-medium" style="font-size: 11px;">Kedisiplinan Tertib</div>
-          <h5 class="fw-bold mb-0 text-info" id="stat-disiplin-tertib">0 Santri</h5>
+      <!-- 4. KEDISIPLINAN TERTIB -->
+      <div class="col-6 col-md-4 col-xl-2">
+        <div class="stat-card cursor-pointer" id="card-filter-tertib" onclick="filterSantriByWidget('tertib')" title="Klik untuk memfilter santri Kedisiplinan Tertib (Nihil Poin Minus)">
+          <div class="d-flex align-items-center gap-2">
+            <div class="rounded-circle bg-info-subtle text-info p-2 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">
+              <i class="bi bi-shield-check fs-5"></i>
+            </div>
+            <div style="min-width: 0;">
+              <div class="text-muted small fw-medium text-truncate" style="font-size: 10.5px;">Disiplin Tertib</div>
+              <h6 class="fw-bold mb-0 text-info text-truncate" id="stat-disiplin-tertib" style="font-size: 13.5px;">0 Santri</h6>
+            </div>
+          </div>
         </div>
       </div>
+      <!-- 5. DISIPLIN POIN MINUS -->
+      <div class="col-6 col-md-4 col-xl-2">
+        <div class="stat-card cursor-pointer" id="card-filter-minus" onclick="filterSantriByWidget('minus')" title="Klik untuk memfilter santri yang memiliki catatan pelanggaran / poin minus">
+          <div class="d-flex align-items-center gap-2">
+            <div class="rounded-circle bg-danger-subtle text-danger p-2 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">
+              <i class="bi bi-shield-x fs-5"></i>
+            </div>
+            <div style="min-width: 0;">
+              <div class="text-muted small fw-medium text-truncate" style="font-size: 10.5px;">Ada Poin Minus</div>
+              <h6 class="fw-bold mb-0 text-danger text-truncate" id="stat-disiplin-minus" style="font-size: 13.5px;">0 Santri</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 6. CATATAN MEDIS UKS -->
+      <div class="col-6 col-md-4 col-xl-2">
+        <div class="stat-card cursor-pointer" id="card-filter-uks" onclick="filterSantriByWidget('uks')" title="Klik untuk memfilter santri yang memiliki riwayat sakit/kunjungan UKS">
+          <div class="d-flex align-items-center gap-2">
+            <div class="rounded-circle bg-warning-subtle text-warning p-2 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">
+              <i class="bi bi-heart-pulse-fill fs-5"></i>
+            </div>
+            <div style="min-width: 0;">
+              <div class="text-muted small fw-medium text-truncate" style="font-size: 10.5px;">Catatan UKS</div>
+              <h6 class="fw-bold mb-0 text-dark text-truncate" id="stat-catatan-uks" style="font-size: 13.5px;">0 Santri</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alert Filter Aktif Banner -->
+    <div id="lap-filter-active-alert" class="alert alert-info border-0 shadow-2xs py-2 px-3 mb-3 d-flex align-items-center justify-content-between rounded-3 d-none">
+      <div class="d-flex align-items-center gap-2 small">
+        <i class="bi bi-funnel-fill text-primary"></i>
+        <span>Memfilter tampilan santri: <strong id="lap-filter-active-text">-</strong></span>
+      </div>
+      <button type="button" class="btn btn-xs btn-outline-secondary rounded-pill py-0.5 px-2" onclick="filterSantriByWidget('all')">
+        <i class="bi bi-x-circle me-1"></i>Hapus Filter
+      </button>
     </div>
 
     <!-- SEARCH & REALTIME FILTER BAR -->
@@ -1259,7 +1330,14 @@
             }
 
             if (foundGroup) {
-              publicState.allSantri = foundGroup.santriList || [];
+              // Double safety frontend: pastikan santri nonaktif dikeluarkan
+              publicState.allSantri = (foundGroup.santriList || []).filter(function(s) {
+                var sSts = String(s.statusAktif || s.status || s.keaktifan || '').toLowerCase();
+                if (sSts.includes('tidak') || sSts.includes('non') || sSts.includes('keluar') || sSts.includes('pindah') || sSts.includes('mutasi') || sSts.includes('lulus') || sSts.includes('alumni') || sSts.includes('inaktif')) {
+                  return false;
+                }
+                return true;
+              });
               publicState.musyrif = foundGroup.musyrif || {};
               publicState.kadiv = res.data.kadivInfo || {};
               renderMusyrifInfo(publicState.musyrif);
@@ -1269,8 +1347,12 @@
 
             publicState.filteredSantri = publicState.allSantri.slice();
 
-            // Hitung ringkasan statistik
+            // Hitung ringkasan statistik (6 Metrik)
             updateClassStats(publicState.allSantri);
+
+            // Reset widget filter UI ke 'all'
+            publicState.activeWidgetFilter = 'all';
+            updateWidgetActiveUI('all');
 
             // Render baris tabel
             renderSantriRows(publicState.filteredSantri);
@@ -1340,20 +1422,35 @@
     function updateClassStats(santriList) {
       var total = santriList.length;
       var totalMumtaz = 0;
+      var totalBimbingan = 0;
       var totalUks = 0;
       var totalTertib = 0;
+      var totalMinus = 0;
 
       santriList.forEach(function(s) {
         if (s.ibadah && s.ibadah.grade === 'A') totalMumtaz++;
-        if (s.kesehatan && !String(s.kesehatan.status || '').toLowerCase().includes('sehat')) totalUks++;
-        if (s.disiplin && s.disiplin.grade === 'A') totalTertib++;
+        if (s.ibadah && (s.ibadah.grade === 'C' || s.ibadah.grade === 'D')) totalBimbingan++;
+        if (s.kesehatan && (!String(s.kesehatan.status || '').toLowerCase().includes('sehat') || s.kesehatan.totalKunjungan > 0)) totalUks++;
+        if (s.disiplin && (s.disiplin.grade === 'A' || s.disiplin.totalPoinMinus === 0)) totalTertib++;
+        if (s.disiplin && (s.disiplin.totalPoinMinus > 0 || (s.disiplin.grade && s.disiplin.grade !== 'A'))) totalMinus++;
       });
 
-      document.getElementById('stat-total-santri').textContent = total + ' Santri';
-      document.getElementById('stat-ibadah-mumtaz').textContent = totalMumtaz + ' Santri (' + (total > 0 ? Math.round((totalMumtaz/total)*100) : 0) + '%)';
-      document.getElementById('stat-catatan-uks').textContent = totalUks + ' Santri';
-      document.getElementById('stat-disiplin-tertib').textContent = totalTertib + ' Santri';
-      document.getElementById('count-santri-filtered').textContent = total;
+      var elTot = document.getElementById('stat-total-santri');
+      var elMum = document.getElementById('stat-ibadah-mumtaz');
+      var elBim = document.getElementById('stat-ibadah-bimbingan');
+      var elDis = document.getElementById('stat-disiplin-tertib');
+      var elMin = document.getElementById('stat-disiplin-minus');
+      var elUks = document.getElementById('stat-catatan-uks');
+
+      if (elTot) elTot.textContent = total + ' Santri';
+      if (elMum) elMum.textContent = totalMumtaz + ' Santri (' + (total > 0 ? Math.round((totalMumtaz/total)*100) : 0) + '%)';
+      if (elBim) elBim.textContent = totalBimbingan + ' Santri';
+      if (elDis) elDis.textContent = totalTertib + ' Santri';
+      if (elMin) elMin.textContent = totalMinus + ' Santri';
+      if (elUks) elUks.textContent = totalUks + ' Santri';
+
+      var elCount = document.getElementById('count-santri-filtered');
+      if (elCount) elCount.textContent = total;
     }
 
     function getSafeAvatarUrl(nama, size) {
@@ -1464,18 +1561,90 @@
       tbody.innerHTML = html;
     }
 
-    // Pencarian Santri Real-Time
-    function filterSantriTable(keyword) {
-      var kw = (keyword || '').toLowerCase().trim();
-      if (!kw) {
-        publicState.filteredSantri = publicState.allSantri.slice();
-      } else {
-        publicState.filteredSantri = publicState.allSantri.filter(function(s) {
-          return (s.nama && s.nama.toLowerCase().includes(kw)) ||
-                 (s.nis && String(s.nis).toLowerCase().includes(kw)) ||
-                 (s.kamar && String(s.kamar).toLowerCase().includes(kw));
-        });
+    // Logika Filter Santri berdasarkan Widget Aktif & Pencarian Real-Time
+    publicState.activeWidgetFilter = 'all';
+    publicState.currentKeyword = '';
+
+    function updateWidgetActiveUI(activeFilter) {
+      var cards = ['all', 'mumtaz', 'bimbingan', 'tertib', 'minus', 'uks'];
+      cards.forEach(function(c) {
+        var el = document.getElementById('card-filter-' + c);
+        if (el) {
+          if (c === activeFilter) {
+            el.classList.add('border-primary', 'shadow-sm');
+            el.style.borderColor = '#0d6efd';
+            el.style.borderWidth = '2px';
+          } else {
+            el.classList.remove('border-primary', 'shadow-sm');
+            el.style.borderColor = '';
+            el.style.borderWidth = '';
+          }
+        }
+      });
+
+      var alertEl = document.getElementById('lap-filter-active-alert');
+      var alertText = document.getElementById('lap-filter-active-text');
+      if (alertEl && alertText) {
+        if (!activeFilter || activeFilter === 'all') {
+          alertEl.classList.add('d-none');
+        } else {
+          alertEl.classList.remove('d-none');
+          var filterLabels = {
+            mumtaz: 'Ibadah Mumtaz (Grade A)',
+            bimbingan: 'Ibadah Perlu Bimbingan (Grade C / D)',
+            tertib: 'Kedisiplinan Tertib (Nihil Poin Minus)',
+            minus: 'Kedisiplinan Ada Poin Minus / Pelanggaran',
+            uks: 'Kesehatan Ada Catatan Medis UKS'
+          };
+          alertText.textContent = filterLabels[activeFilter] || activeFilter;
+        }
       }
+    }
+
+    function filterSantriByWidget(filterType) {
+      var nextFilter = filterType || 'all';
+      if (publicState.activeWidgetFilter === nextFilter && nextFilter !== 'all') {
+        nextFilter = 'all';
+      }
+      publicState.activeWidgetFilter = nextFilter;
+      updateWidgetActiveUI(nextFilter);
+      applyAllFilters();
+    }
+
+    function filterSantriTable(keyword) {
+      publicState.currentKeyword = (keyword || '').toLowerCase().trim();
+      applyAllFilters();
+    }
+
+    function applyAllFilters() {
+      var kw = publicState.currentKeyword || '';
+      var wf = publicState.activeWidgetFilter || 'all';
+
+      publicState.filteredSantri = publicState.allSantri.filter(function(s) {
+        // Widget Filter
+        if (wf === 'mumtaz') {
+          if (!s.ibadah || s.ibadah.grade !== 'A') return false;
+        } else if (wf === 'bimbingan') {
+          if (!s.ibadah || (s.ibadah.grade !== 'C' && s.ibadah.grade !== 'D')) return false;
+        } else if (wf === 'tertib') {
+          var pMin = (s.disiplin && s.disiplin.totalPoinMinus !== undefined) ? s.disiplin.totalPoinMinus : (s.disiplin && s.disiplin.grade === 'A' ? 0 : 1);
+          if (pMin > 0) return false;
+        } else if (wf === 'minus') {
+          var pMin = (s.disiplin && s.disiplin.totalPoinMinus !== undefined) ? s.disiplin.totalPoinMinus : (s.disiplin && s.disiplin.grade !== 'A' ? 1 : 0);
+          if (pMin <= 0) return false;
+        } else if (wf === 'uks') {
+          var isSakit = s.kesehatan && !String(s.kesehatan.status || '').toLowerCase().includes('sehat');
+          var jmlUks = (s.kesehatan && s.kesehatan.totalKunjungan) ? s.kesehatan.totalKunjungan : 0;
+          if (!isSakit && jmlUks <= 0) return false;
+        }
+
+        // Keyword filter
+        if (!kw) return true;
+        return (s.nama && s.nama.toLowerCase().includes(kw)) ||
+               (s.nis && String(s.nis).toLowerCase().includes(kw)) ||
+               (s.kamar && String(s.kamar).toLowerCase().includes(kw));
+      });
+
       renderSantriRows(publicState.filteredSantri);
     }
 
@@ -1836,19 +2005,27 @@
       izHtml += '</div>';
 
       izHtml += '<div class="col-12 col-md-6">';
-      izHtml += '<h6 class="fw-bold text-info small mb-2"><i class="bi bi-telephone me-1"></i>Riwayat Telepon Wartel:</h6>';
+      izHtml += '<h6 class="fw-bold text-info small mb-2"><i class="bi bi-telephone-outbound me-1"></i>Riwayat &amp; Tagihan Telepon Wartel:</h6>';
       if (telList.length === 0) {
         izHtml += '<div class="p-3 bg-light rounded-3 text-muted small text-center">Tidak ada catatan penelponan bulan ini.</div>';
       } else {
         izHtml += '<div class="list-group list-group-flush border rounded-3 modal-tab-scroll">';
         telList.forEach(function(tl) {
+          var durStr = (tl.durasiMenit !== undefined) ? (tl.durasiMenit + ' Menit' + (tl.durasiDetik ? ' (' + tl.durasiDetik + ' dtk)' : '')) : (tl.durasi || '-');
+          var biayaStr = (tl.biaya !== undefined) ? ('Rp ' + Number(tl.biaya).toLocaleString('id-ID')) : '-';
+          var stsBayar = tl.statusBayar || 'Lunas';
+          var stsBadge = stsBayar.toLowerCase().includes('belum') ? 'bg-danger' : 'bg-success';
           izHtml += 
-            '<div class="list-group-item p-2">' +
-              '<div class="d-flex justify-content-between">' +
-                '<span class="fw-bold">' + escapeHtml(tl.tanggal || '-') + '</span>' +
-                '<span class="badge bg-info text-dark">' + escapeHtml(tl.durasi || '-') + '</span>' +
+            '<div class="list-group-item p-2.5">' +
+              '<div class="d-flex justify-content-between align-items-center mb-1">' +
+                '<span class="fw-bold text-dark"><i class="bi bi-telephone-outbound text-success me-1"></i>' + escapeHtml(tl.tanggal || '-') + '</span>' +
+                '<span class="badge ' + stsBadge + '">' + escapeHtml(stsBayar) + '</span>' +
               '</div>' +
-              '<div class="small text-muted">Tujuan: ' + escapeHtml(tl.tujuan || 'Wali') + '</div>' +
+              '<div class="small text-muted d-flex justify-content-between align-items-center flex-wrap gap-1">' +
+                '<span>Tujuan: <strong>' + escapeHtml(tl.noHpTujuan || tl.tujuan || 'Wali') + '</strong></span>' +
+                '<span>Durasi: <strong>' + durStr + '</strong></span>' +
+                '<span>Tagihan: <strong class="text-dark">' + biayaStr + '</strong></span>' +
+              '</div>' +
             '</div>';
         });
         izHtml += '</div>';
